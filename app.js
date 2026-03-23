@@ -8,7 +8,7 @@ const auth=getAuth(app),db=getFirestore(app);
 const MN=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const MS=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 const DF=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
-const td=new Date();let Y=td.getFullYear(),M=td.getMonth(),fl="all",ws=[],cn="hoy",cf="all",monthLoaded=false;
+const td=new Date();let Y=td.getFullYear(),M=td.getMonth(),fl="all",ws=[],cn="hoy",cf="all",monthLoaded=false,compsLive=[];
 
 const COMPS=[
 {date:"2026-03-22",name:"Media Maraton de Madrid",dist:"5/21 km",lugar:"Madrid",cat:"running"},
@@ -69,7 +69,29 @@ function setUI(u){const e=u.email||"",i=e.charAt(0).toUpperCase();document.getEl
 window.toggleUM=()=>document.getElementById("umenu").classList.toggle("open");
 document.addEventListener("click",e=>{if(!e.target.closest("#uav")&&!e.target.closest("#umenu"))document.getElementById("umenu").classList.remove("open");});
 
-function iA(){const now=new Date(),h=now.getHours();document.getElementById("gt").textContent=h<13?"Buenos días":h<20?"Buenas tardes":"Buenas noches";goToday();}
+function iA(){const now=new Date(),h=now.getHours();document.getElementById("gt").textContent=h<13?"Buenos días":h<20?"Buenas tardes":"Buenas noches";goToday();lC();}
+
+async function lC(){
+  try{
+    const sn=await getDocs(collection(db,"competiciones"));
+    const tmp=[];
+    sn.forEach(d=>{
+      const c=d.data()||{};
+      if(!c.date||!c.name)return;
+      tmp.push({
+        date:String(c.date),
+        name:String(c.name),
+        dist:String(c.dist||""),
+        lugar:String(c.lugar||""),
+        cat:String(c.cat||"running").toLowerCase(),
+        note:String(c.note||"")
+      });
+    });
+    tmp.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    compsLive=tmp;
+    if(cn==="comp")bCP();
+  }catch(e){compsLive=[];}
+}
 
 async function lM(){
   document.getElementById("msc").innerHTML='<div class="lw">Cargando<div class="lb"><div class="lf"></div></div></div>';
@@ -144,7 +166,7 @@ window.oD=function(w){const ds=gD(w),pts=ds.split("-"),d=parseInt(pts[2]),mo=par
   [[w.warmup,"Calentamiento"],[w.main,"Parte principal"],[w.metcon,"MetCon"],[w.cooldown,"Vuelta a la calma"]].forEach(([v,l])=>{if(!v)return;const ls=v.split("\n").filter(x=>x.trim());bd+='<div class="bb"><div class="bbl">'+l+'</div>'+ls.map((x,i)=>'<div class="bbi"><div class="bbn">'+(i+1)+'</div>'+x.trim()+'</div>').join("")+'</div>';});
   document.getElementById("dbd").innerHTML=bd||'<div style="padding:20px;color:var(--t3)">Sin detalle</div>';document.getElementById("dp").classList.add("open");document.body.style.overflow="hidden";};
 window.filterComps=function(f,el){cf=f;document.querySelectorAll("#comp-filters .cpill").forEach(p=>p.classList.remove("on"));el.classList.add("on");bCP();};
-function bCP(){const now=new Date();now.setHours(0,0,0,0);const filtered=cf==="all"?COMPS:COMPS.filter(c=>c.cat===cf);let up="",pa="";
+function bCP(){const now=new Date();now.setHours(0,0,0,0);const source=compsLive.length?compsLive:COMPS;const filtered=cf==="all"?source:source.filter(c=>c.cat===cf);let up="",pa="";
   filtered.forEach(c=>{const dt=new Date(c.date+"T00:00:00"),d=parseInt(c.date.split("-")[2]),mo=parseInt(c.date.split("-")[1])-1,ip=dt<now,cat=c.cat;
     const card='<div class="cc'+(ip?" past":"")+'"><div class="ccb '+cat+'"></div><div class="cci"><div class="cd"><span class="cdd">'+d+'</span><span class="cdm">'+MS[mo]+'</span></div><div class="cn"><div class="cnn">'+c.name+'</div><div class="cnm">'+c.lugar+(c.note?" — "+c.note:"")+'</div></div><span class="cdd2 '+cat+'">'+c.dist+'</span></div></div>';
     if(ip)pa+=card;else up+=card;});

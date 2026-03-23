@@ -557,7 +557,11 @@ function logout() {
 if (localStorage.getItem('ih_admin') === '1') {
   document.getElementById('ls').classList.add('h');
   document.getElementById('app').classList.add('on');
-  window.addEventListener('load', initAdmin);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAdmin);
+  } else {
+    initAdmin();
+  }
 }
 
 // ── SPORT SELECTOR ──
@@ -964,15 +968,17 @@ function renderCompList() {
   const now = new Date(); now.setHours(0,0,0,0);
   document.getElementById('comp-list').innerHTML = filtered.map(c => {
     const isPast = new Date(c.date+'T00:00:00') < now;
-    return '<div class="wod-row" style="'+(isPast?'opacity:.45':'')+'">'+
-      '<span class="wr-date">'+c.date+'</span>'+
-      '<span class="badge '+(spMap[c.cat]||'badge-bl')+'" style="margin-right:6px;min-width:60px;justify-content:center">'+c.cat+'</span>'+
-      '<div style="flex:1;min-width:0">'+
-        '<div class="wr-title">'+c.name+'</div>'+
-        '<div class="wr-sede">'+(c.lugar||'')+(c.dist?' · '+c.dist:'')+(c.note?' — '+c.note:'')+'</div>'+
-      '</div>'+
-      '<button class="wr-del" onclick="confirmDelComp(''+c.id+'',''+c.name.replace(/'/g,"\'")+'')" >Eliminar</button>'+
-    '</div>';
+    return [
+      '<div class="wod-row" style="'+(isPast?'opacity:.45':'')+'" >',
+        '<span class="wr-date">'+c.date+'</span>',
+        '<span class="badge '+(spMap[c.cat]||'badge-bl')+'" style="margin-right:6px;min-width:60px;justify-content:center">'+c.cat+'</span>',
+        '<div style="flex:1;min-width:0">',
+          '<div class="wr-title">'+c.name+'</div>',
+          '<div class="wr-sede">'+(c.lugar||'')+(c.dist?' - '+c.dist:'')+(c.note?' | '+c.note:'')+'</div>',
+        '</div>',
+        '<button class="wr-del" data-id="'+c.id+'" data-name="'+c.name.replace(/"/g,'&quot;')+'" onclick="confirmDelComp(this.dataset.id,this.dataset.name)">Eliminar</button>',
+      '</div>'
+    ].join('');
   }).join('');
 }
 

@@ -33,7 +33,7 @@ body{font-family:"DM Sans",-apple-system,sans-serif;background:var(--bg);color:v
 .big{font-size:74px;line-height:1;font-weight:700;letter-spacing:-2px;margin-top:6px}
 .round{font-size:14px;color:var(--t2);margin-top:6px}
 .bar{height:6px;background:var(--bg);border-radius:4px;overflow:hidden;margin-top:14px}
-.fill{height:100%;background:var(--bl);width:100%;transition:width .9s linear}
+.fill{height:100%;background:var(--bl);width:0%;transition:width .9s linear}
 .ctrls{display:flex;gap:8px;margin-top:14px}
 .ctrls .btn{flex:1}
 .chip{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(0,122,255,.1);color:var(--bl);font-size:11px;font-weight:700;margin-top:8px}
@@ -78,59 +78,148 @@ body{font-family:"DM Sans",-apple-system,sans-serif;background:var(--bg);color:v
 </div>
 
 <script>
-const modes={
-  tabata:[["rounds","Rounds",8],["work","Trabajo (seg)",20],["rest","Descanso (seg)",10]],
-  amrap:[["mins","Minutos",12]],
-  emom:[["mins","Minutos",12]],
-  countdown:[["mins","Minutos",5],["secs","Segundos",0]],
+const modes = {
+  tabata:    [["rounds","Rounds",8],["work","Trabajo (seg)",20],["rest","Descanso (seg)",10]],
+  amrap:     [["mins","Minutos",12]],
+  emom:      [["roundMins","Min por ronda",1],["rounds","Rondas",10]],
+  countdown: [["mins","Minutos",5],["secs","Segundos",0]],
 };
-let mode="tabata",cfg={},intv=null,paused=false,phase="prep",left=0,dur=0,round=1,total=1,elapsed=0;
-const $=id=>document.getElementById(id);
 
-function renderFields(){
-  $("fields").innerHTML=modes[mode].map(([id,lbl,val])=>`<div class="f"><label class="lbl">${lbl}</label><input class="inp" id="${id}" type="number" min="0" value="${val}"></div>`).join("");
+let mode = "tabata", cfg = {}, intv = null, paused = false,
+    phase = "prep", left = 0, dur = 0, round = 1, total = 1;
+
+const $ = id => document.getElementById(id);
+
+function renderFields() {
+  $("fields").innerHTML = modes[mode].map(([id, lbl, val]) =>
+    `<div class="f"><label class="lbl">${lbl}</label><input class="inp" id="${id}" type="number" min="1" value="${val}"></div>`
+  ).join("");
 }
-function fmt(s){const m=Math.floor(s/60),x=s%60;return `${m}:${x<10?"0":""}${x}`;}
-function setView(v){["setup","timer","finish"].forEach(id=>$(id).classList.remove("on"));if(v==="setup")$("setup").style.display="block";else $("setup").style.display="none";$(v).classList.add("on");}
-function readCfg(){const g=id=>parseInt(document.getElementById(id)?.value||0,10)||0;if(mode==="tabata")return{rounds:g("rounds")||8,work:g("work")||20,rest:g("rest")||10};if(mode==="amrap")return{total:(g("mins")||12)*60};if(mode==="emom")return{total:(g("mins")||12)*60};return{total:(g("mins")||5)*60+(g("secs")||0)};}
-function ui(label,timeTxt,roundTxt,p){$("phase").textContent=label;$("time").textContent=timeTxt;$("round").textContent=roundTxt||"";$("fill").style.width=`${Math.max(0,Math.min(1,p))*100}%`;}
-function finish(msg){clearInterval(intv);intv=null;setView("finish");$("finishMsg").textContent=msg;}
-function startMain(){
-  if(mode==="tabata"){phase="work";round=1;total=cfg.rounds;left=cfg.work;dur=cfg.work;ui("Trabajo",left,`Round ${round}/${total}`,1);}
-  if(mode==="amrap"){left=cfg.total;dur=cfg.total;ui("AMRAP",fmt(left),"",1);}
-  if(mode==="emom"){left=cfg.total;dur=cfg.total;ui("EMOM",fmt(left),"Min 1",1);}
-  if(mode==="countdown"){left=cfg.total;dur=cfg.total;ui("Cuenta atrás",fmt(left),"",1);}
-  intv=setInterval(tick,1000);
+
+function fmt(s) {
+  const m = Math.floor(s / 60), x = s % 60;
+  return `${String(m).padStart(2,"0")}:${x < 10 ? "0" : ""}${x}`;
 }
-function start(){
-  cfg=readCfg();paused=false;elapsed=0;setView("timer");
-  let prep=3;ui("Prepárate",prep,"",1);clearInterval(intv);
-  intv=setInterval(()=>{prep--;if(prep<=0){clearInterval(intv);startMain();return;}ui("Prepárate",prep,"",1);},1000);
+
+function setView(v) {
+  ["setup","timer","finish"].forEach(id => $(id).classList.remove("on"));
+  $("setup").style.display = v === "setup" ? "block" : "none";
+  $(v).classList.add("on");
 }
-function tick(){
-  if(paused)return;
-  if(mode==="tabata"){
-    left--;
-    if(left<=0){
-      if(phase==="work"){phase="rest";left=cfg.rest;dur=cfg.rest;ui("Descanso",left,`Round ${round}/${total}`,1);return;}
-      round++;
-      if(round>total){finish(`${total} rounds completados`);return;}
-      phase="work";left=cfg.work;dur=cfg.work;ui("Trabajo",left,`Round ${round}/${total}`,1);return;
-    }
-    ui(phase==="work"?"Trabajo":"Descanso",left,`Round ${round}/${total}`,left/dur);return;
+
+function readCfg() {
+  const g = id => parseInt(document.getElementById(id)?.value || 0, 10) || 0;
+  if (mode === "tabata")    return { rounds: g("rounds") || 8, work: g("work") || 20, rest: g("rest") || 10 };
+  if (mode === "amrap")     return { total: (g("mins") || 12) * 60 };
+  if (mode === "emom")      return { roundSecs: (g("roundMins") || 1) * 60, rounds: g("rounds") || 10 };
+  return { total: (g("mins") || 5) * 60 + (g("secs") || 0) };
+}
+
+function ui(label, timeTxt, roundTxt, p) {
+  $("phase").textContent = label;
+  $("time").textContent = timeTxt;
+  $("round").textContent = roundTxt || "";
+  $("fill").style.width = `${Math.max(0, Math.min(1, p)) * 100}%`;
+}
+
+function finish(msg) {
+  clearInterval(intv); intv = null;
+  setView("finish");
+  $("finishMsg").textContent = msg;
+}
+
+function startMain() {
+  if (mode === "tabata") {
+    phase = "work"; round = 1; total = cfg.rounds;
+    left = cfg.work; dur = cfg.work;
+    ui("Trabajo", left, `Ronda ${round}/${total}`, 0);
   }
-  left--;
-  if(left<=0){finish(mode==="countdown"?"Cuenta atrás completada":"Tiempo completado");return;}
-  if(mode==="amrap")ui("AMRAP",fmt(left),"",left/dur);
-  if(mode==="countdown")ui("Cuenta atrás",fmt(left),"",left/dur);
-  if(mode==="emom"){const min=Math.ceil(left/60);ui("EMOM",fmt(left),`Min ${min}`,left/dur);}
+  if (mode === "amrap") {
+    left = cfg.total; dur = cfg.total;
+    ui("AMRAP", fmt(left), "", 0);
+  }
+  if (mode === "emom") {
+    round = 1; total = cfg.rounds;
+    left = cfg.roundSecs; dur = cfg.roundSecs;
+    ui("EMOM", fmt(left), `Ronda ${round}/${total} · ${cfg.roundSecs / 60} min`, 0);
+  }
+  if (mode === "countdown") {
+    left = cfg.total; dur = cfg.total;
+    ui("Cuenta atrás", fmt(left), "", 0);
+  }
+  intv = setInterval(tick, 1000);
 }
 
-document.querySelectorAll(".mode").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".mode").forEach(x=>x.classList.remove("on"));b.classList.add("on");mode=b.dataset.mode;renderFields();}));
-$("startBtn").addEventListener("click",start);
-$("pauseBtn").addEventListener("click",()=>{paused=!paused;$("pauseBtn").textContent=paused?"Reanudar":"Pausar";});
-$("stopBtn").addEventListener("click",()=>{clearInterval(intv);intv=null;setView("setup");});
-$("againBtn").addEventListener("click",()=>{setView("setup");});
+function start() {
+  cfg = readCfg(); paused = false; setView("timer");
+  let prep = 3;
+  ui("Prepárate", prep, "", 1);
+  clearInterval(intv);
+  intv = setInterval(() => {
+    prep--;
+    if (prep <= 0) { clearInterval(intv); startMain(); return; }
+    ui("Prepárate", prep, "", 1);
+  }, 1000);
+}
+
+function tick() {
+  if (paused) return;
+
+  // TABATA
+  if (mode === "tabata") {
+    left--;
+    if (left <= 0) {
+      if (phase === "work") {
+        phase = "rest"; left = cfg.rest; dur = cfg.rest;
+        ui("Descanso", left, `Ronda ${round}/${total}`, 0); return;
+      }
+      round++;
+      if (round > total) { finish(`${total} rounds completados`); return; }
+      phase = "work"; left = cfg.work; dur = cfg.work;
+      ui("Trabajo", left, `Ronda ${round}/${total}`, 0); return;
+    }
+    ui(phase === "work" ? "Trabajo" : "Descanso", left, `Ronda ${round}/${total}`, 1 - left / dur);
+    return;
+  }
+
+  // EMOM — cuenta atrás por ronda, avanza ronda al llegar a 0
+  if (mode === "emom") {
+    left--;
+    if (left <= 0) {
+      round++;
+      if (round > total) { finish(`${total} rondas completadas`); return; }
+      left = cfg.roundSecs; dur = cfg.roundSecs;
+      ui("EMOM", fmt(left), `Ronda ${round}/${total} · ${cfg.roundSecs / 60} min`, 0);
+      return;
+    }
+    ui("EMOM", fmt(left), `Ronda ${round}/${total} · ${cfg.roundSecs / 60} min`, 1 - left / dur);
+    return;
+  }
+
+  // AMRAP y COUNTDOWN — cuenta atrás total
+  left--;
+  if (left <= 0) {
+    finish(mode === "countdown" ? "Cuenta atrás completada" : "Tiempo completado"); return;
+  }
+  if (mode === "amrap")     ui("AMRAP", fmt(left), "", 1 - left / dur);
+  if (mode === "countdown") ui("Cuenta atrás", fmt(left), "", 1 - left / dur);
+}
+
+document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".mode").forEach(x => x.classList.remove("on"));
+  b.classList.add("on");
+  mode = b.dataset.mode;
+  renderFields();
+}));
+
+$("startBtn").addEventListener("click", start);
+$("pauseBtn").addEventListener("click", () => {
+  paused = !paused;
+  $("pauseBtn").textContent = paused ? "Reanudar" : "Pausar";
+});
+$("stopBtn").addEventListener("click", () => { clearInterval(intv); intv = null; setView("setup"); });
+$("againBtn").addEventListener("click", () => setView("setup"));
+
 renderFields();
 </script>
 </body>

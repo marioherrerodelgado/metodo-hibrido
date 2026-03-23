@@ -658,16 +658,45 @@ function parseExcel(file) {
       const wb = XLSX.read(e.target.result, { type:'array' });
       const ws = wb.Sheets[wb.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json(ws, { defval:'' });
-      const wods = rows.filter(r => r.fecha && String(r.fecha).match(/\d{4}-\d{2}-\d{2}/)).map(r => {
+
+      const cleanKey = k => String(k || '').replace(/^\uFEFF/, '').trim().toLowerCase();
+      const normRow = r => {
+        const out = {};
+        Object.entries(r).forEach(([k,v]) => out[cleanKey(k)] = v);
+        return out;
+      };
+      const normDate = v => {
+        if (typeof v === 'number') {
+          const d = XLSX.SSF.parse_date_code(v);
+          if (d && d.y && d.m && d.d) return `${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`;
+          return '';
+        }
+        let s = String(v || '').trim();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+        if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) {
+          const [dd,mm,yy] = s.split('/');
+          return `${yy}-${mm}-${dd}`;
+        }
+        return '';
+      };
+
+      const wods = rows.map(r => {
+        const nr = normRow(r);
         const w = {};
+        const fecha = normDate(nr.fecha || nr.date || nr['fecha ']);
+        if (fecha) w.fecha = fecha;
         const map = {
           fecha:'fecha',month:'month',sport:'sport',sede:'sede',titulo:'titulo',
           intensity:'intensity',duration:'duration',volume:'volume',type:'type',
           notes:'notes',warmup:'warmup',main:'main',metcon:'metcon',cooldown:'cooldown'
         };
-        Object.entries(map).forEach(([k,v]) => { if (r[v] !== undefined && r[v] !== '') w[k] = String(r[v]).trim(); });
+        Object.entries(map).forEach(([k,v]) => {
+          if (k === 'fecha') return;
+          if (nr[v] !== undefined && nr[v] !== '') w[k] = String(nr[v]).trim();
+        });
+        if (!w.titulo && nr['título']) w.titulo = String(nr['título']).trim();
         // Fallback columns
-        if (!w.sport) w.sport = r['Deporte'] ? String(r['Deporte']).trim().toLowerCase() : 'running';
+        if (!w.sport) w.sport = nr['deporte'] ? String(nr['deporte']).trim().toLowerCase() : 'running';
         if (!w.month && w.fecha) w.month = w.fecha.slice(0,7);
         return w;
       }).filter(w => w.fecha && w.titulo);

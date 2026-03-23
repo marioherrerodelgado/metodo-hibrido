@@ -120,7 +120,20 @@ function bMM(){document.getElementById("my").textContent=Y;document.getElementBy
 window.oMM=()=>document.getElementById("mo").classList.add("open");
 window.cMM=()=>document.getElementById("mo").classList.remove("open");
 window.sM=m=>{M=m;cMM();lM();};
-window.nT=function(t){cn=t;["hoy","mes","comp","box"].forEach(x=>{const b=document.getElementById("b"+x[0]);if(b){b.classList.remove("on");b.querySelector(".bil").style.color="";}});const ab=document.getElementById("b"+t[0]);if(ab){ab.classList.add("on");ab.querySelector(".bil").style.color="var(--bl)";}["dp","cp","bxp"].forEach(id=>document.getElementById(id).classList.remove("open"));document.body.style.overflow="";if(t==="hoy"){goToday();}else if(t==="mes")oMM();else if(t==="comp"){bCP();document.getElementById("cp").classList.add("open");}else if(t==="box"){document.getElementById("bxp").classList.add("open");}};
+window.nT=function(t){
+  cn=t;
+  const mo=document.getElementById("mo");
+  const monthWasOpen=mo.classList.contains("open");
+  cMM();
+  ["hoy","mes","comp","box"].forEach(x=>{const b=document.getElementById("b"+x[0]);if(b){b.classList.remove("on");b.querySelector(".bil").style.color="";}});
+  const ab=document.getElementById("b"+t[0]);if(ab){ab.classList.add("on");ab.querySelector(".bil").style.color="var(--bl)";}
+  ["dp","cp","bxp"].forEach(id=>document.getElementById(id).classList.remove("open"));
+  document.body.style.overflow="";
+  if(t==="hoy"){goToday();return;}
+  if(t==="mes"){if(!monthWasOpen)oMM();return;}
+  if(t==="comp"){bCP();document.getElementById("cp").classList.add("open");return;}
+  if(t==="box"){document.getElementById("bxp").classList.add("open");}
+};
 window.cP=function(w){const ids={d:"dp",c:"cp",b:"bxp"};if(ids[w])document.getElementById(ids[w]).classList.remove("open");document.body.style.overflow="";["hoy","mes","comp","box"].forEach(x=>{const b=document.getElementById("b"+x[0]);if(b){b.classList.remove("on");b.querySelector(".bil").style.color="";}});document.getElementById("bh").classList.add("on");document.getElementById("bh").querySelector(".bil").style.color="var(--bl)";cn="hoy";};
 window.oD=function(w){const ds=gD(w),pts=ds.split("-"),d=parseInt(pts[2]),mo=parseInt(pts[1])-1,dt=new Date(parseInt(pts[0]),mo,d),sc=gSC(w),isC=(w.type||"").toLowerCase().includes("compet");
   document.getElementById("dpi").textContent=isC?"Competición":gSL(w);document.getElementById("dpi").className="dp "+sc;

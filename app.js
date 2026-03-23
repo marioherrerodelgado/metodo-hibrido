@@ -8,7 +8,8 @@ const auth=getAuth(app),db=getFirestore(app);
 const MN=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const MS=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 const DF=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
-const td=new Date();let Y=td.getFullYear(),M=td.getMonth(),fl="all",ws=[],cn="hoy",cf="all",monthLoaded=false,compsLive=[];
+const td=new Date();let Y=td.getFullYear(),M=td.getMonth(),fl="all",ws=[],cn="hoy",cf="all",monthLoaded=false,compsLive=[],uemail="",goalPrefs=["all"],boxPrefs=["comunidad","herramientas","equipate","soporte","appinfo"],goalPrefSaved=false;
+const SPORTS=["running","hyrox","deka","crossfit"];
 
 const COMPS=[
 {date:"2026-03-22",name:"Media Maraton de Madrid",dist:"5/21 km",lugar:"Madrid",cat:"running"},
@@ -46,7 +47,7 @@ window.doLogin=async function(){
     err.textContent=m;err.classList.add("show");
   }btn.disabled=false;ld.classList.remove("show");
 };
-window.doLogout=async()=>{await signOut(auth);document.getElementById("umenu").classList.remove("open");};
+window.doLogout=async()=>{await signOut(auth);document.getElementById("umenu").classList.remove("open");uemail="";};
 window.openWodbusterBooking=function(){
   const fallback="https://www.wodbuster.com";
   const ua=navigator.userAgent||"";
@@ -65,11 +66,82 @@ window.openWodbusterBooking=function(){
   }
   window.open(fallback,"_blank","noopener");
 };
-function setUI(u){const e=u.email||"",i=e.charAt(0).toUpperCase();document.getElementById("uav").textContent=i;document.getElementById("ueml").textContent=e;document.getElementById("box-email").textContent=e;}
+function setUI(u){const e=u.email||"",i=e.charAt(0).toUpperCase();uemail=e;document.getElementById("uav").textContent=i;document.getElementById("ueml").textContent=e;document.getElementById("box-email").textContent=e;loadPrefs();applyGoalPrefs();applyBoxPrefs();}
 window.toggleUM=()=>document.getElementById("umenu").classList.toggle("open");
 document.addEventListener("click",e=>{if(!e.target.closest("#uav")&&!e.target.closest("#umenu"))document.getElementById("umenu").classList.remove("open");});
 
 function iA(){const now=new Date(),h=now.getHours();document.getElementById("gt").textContent=h<13?"Buenos días":h<20?"Buenas tardes":"Buenas noches";goToday();lC();}
+function prefKey(k){return "mh_pref_"+k+"_"+(uemail||"anon");}
+function loadPrefs(){
+  try{
+    const gRaw=localStorage.getItem(prefKey("goals"));
+    const g=JSON.parse(gRaw||"null");
+    const b=JSON.parse(localStorage.getItem(prefKey("box"))||"null");
+    goalPrefSaved=!!gRaw;
+    goalPrefs=Array.isArray(g)&&g.length?g:["all"];
+    boxPrefs=Array.isArray(b)&&b.length?b:["comunidad","herramientas","equipate","soporte","appinfo"];
+  }catch(e){goalPrefs=["all"];boxPrefs=["comunidad","herramientas","equipate","soporte","appinfo"];}
+  if(!goalPrefSaved)setTimeout(()=>window.openGoalSetup(),200);
+}
+function savePrefs(){localStorage.setItem(prefKey("goals"),JSON.stringify(goalPrefs));localStorage.setItem(prefKey("box"),JSON.stringify(boxPrefs));}
+function applyGoalPrefs(){
+  const onlyAll=goalPrefs.includes("all");
+  const allowed=onlyAll?SPORTS:goalPrefs.filter(s=>SPORTS.includes(s));
+  document.querySelectorAll(".fp").forEach(p=>{
+    const s=p.dataset.s;
+    const show=s==="all"||onlyAll||allowed.includes(s);
+    p.style.display=show?"":"none";
+  });
+  const fr=document.querySelector(".fr");
+  if(fr)fr.style.display=onlyAll||allowed.length>1?"flex":"none";
+  if(!onlyAll&&allowed.length===1){
+    fl=allowed[0];
+    const btn=document.querySelector(`.fp[data-s="${allowed[0]}"]`);
+    if(btn){document.querySelectorAll(".fp").forEach(p=>p.classList.remove("on"));btn.classList.add("on");}
+  }else if(fl!=="all"&&!allowed.includes(fl)){fl="all";}
+  if(ws.length)rM();
+}
+function applyBoxPrefs(){
+  const active=new Set(boxPrefs);
+  document.querySelectorAll("[data-box-sec]").forEach(el=>{el.style.display=active.has(el.getAttribute("data-box-sec"))?"":"none";});
+}
+window.openGoalSetup=function(){
+  const m=document.getElementById("pref-goals");
+  document.querySelectorAll("#goal-pills .pmi").forEach(b=>b.classList.remove("on"));
+  (goalPrefs.length?goalPrefs:["all"]).forEach(v=>{const b=document.querySelector(`#goal-pills .pmi[data-goal="${v}"]`);if(b)b.classList.add("on");});
+  m.classList.add("open");
+};
+window.saveGoalPrefs=function(){
+  const sel=[...document.querySelectorAll("#goal-pills .pmi.on")].map(b=>b.dataset.goal);
+  goalPrefs=sel.length?sel:["all"];
+  if(goalPrefs.includes("all"))goalPrefs=["all"];
+  savePrefs();applyGoalPrefs();document.getElementById("pref-goals").classList.remove("open");
+};
+window.openBoxSetup=function(){
+  const m=document.getElementById("pref-box");
+  document.querySelectorAll(".box-opt").forEach(c=>c.checked=boxPrefs.includes(c.value));
+  m.classList.add("open");
+};
+window.closeBoxSetup=function(){document.getElementById("pref-box").classList.remove("open");};
+window.saveBoxPrefs=function(){
+  const sel=[...document.querySelectorAll(".box-opt:checked")].map(c=>c.value);
+  boxPrefs=sel.length?sel:["comunidad"];
+  savePrefs();applyBoxPrefs();window.closeBoxSetup();
+};
+document.addEventListener("click",e=>{if(e.target.id==="pref-goals")e.target.classList.remove("open");if(e.target.id==="pref-box")e.target.classList.remove("open");});
+document.addEventListener("click",e=>{
+  const b=e.target.closest("#goal-pills .pmi");
+  if(!b)return;
+  const v=b.dataset.goal;
+  if(v==="all"){
+    document.querySelectorAll("#goal-pills .pmi").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+    return;
+  }
+  document.querySelector('#goal-pills .pmi[data-goal="all"]')?.classList.remove("on");
+  b.classList.toggle("on");
+  if(!document.querySelectorAll("#goal-pills .pmi.on").length)document.querySelector('#goal-pills .pmi[data-goal="all"]')?.classList.add("on");
+});
 
 async function lC(){
   try{
@@ -136,7 +208,17 @@ function gT(){
 }
 window.jD=function(d){document.querySelectorAll(".wd").forEach(e=>e.classList.remove("sel"));const x=document.getElementById("w"+d);if(x){x.classList.add("sel");x.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});}document.querySelectorAll(".dl").forEach(s=>{if(s.textContent.match(new RegExp(",\\s*"+d+"\\s")))s.scrollIntoView({behavior:"smooth",block:"start"});});};
 window.sF=function(s,b){fl=s;document.querySelectorAll(".fp").forEach(p=>p.classList.remove("on"));b.classList.add("on");rM();};
-function setFilterAll(){if(fl==="all")return false;fl="all";document.querySelectorAll(".fp").forEach(p=>p.classList.remove("on"));const ab=document.querySelector('.fp[data-s="all"]');if(ab)ab.classList.add("on");return true;}
+function setFilterAll(){
+  const onlyAll=goalPrefs.includes("all"),allowed=onlyAll?SPORTS:goalPrefs.filter(s=>SPORTS.includes(s));
+  let target="all";
+  if(!onlyAll&&allowed.length===1)target=allowed[0];
+  if(fl===target)return false;
+  fl=target;
+  document.querySelectorAll(".fp").forEach(p=>p.classList.remove("on"));
+  const ab=document.querySelector(`.fp[data-s="${target}"]`)||document.querySelector('.fp[data-s="all"]');
+  if(ab)ab.classList.add("on");
+  return true;
+}
 function goToday(){const now=new Date(),cy=now.getFullYear(),cm=now.getMonth(),monthChanged=Y!==cy||M!==cm,filterChanged=setFilterAll();Y=cy;M=cm;if(monthChanged||!monthLoaded){lM();return;}if(filterChanged){rM();setTimeout(gT,80);return;}gT();}
 function bMM(){document.getElementById("my").textContent=Y;document.getElementById("mg").innerHTML=MS.map((m,i)=>'<div class="mm'+(i===M?" on":"")+'" onclick="sM('+i+')">'+m+"</div>").join("");}
 window.oMM=()=>document.getElementById("mo").classList.add("open");

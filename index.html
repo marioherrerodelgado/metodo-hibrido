@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#f5f5f3">
@@ -47,9 +47,9 @@ body{font-family:"DM Sans",-apple-system,sans-serif;background:var(--bg);color:v
 .fp.on{background:var(--t);color:#fff;border-color:var(--t)}
 .fp[data-s=running].on{background:var(--gr);border-color:var(--gr)}.fp[data-s=hyrox].on{background:var(--pu);border-color:var(--pu)}.fp[data-s=deka].on{background:var(--or);border-color:var(--or)}.fp[data-s=crossfit].on{background:var(--rd);border-color:var(--rd)}
 .ms {
-  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+  padding-bottom: calc(120px + var(--sb));
 }
-}.dl{font-size:11px;font-weight:700;color:var(--t3);letter-spacing:.6px;text-transform:uppercase;padding:16px 6px 8px}
+.dl{font-size:11px;font-weight:700;color:var(--t3);letter-spacing:.6px;text-transform:uppercase;padding:16px 6px 8px}
 .wc{background:var(--sf);border-radius:var(--r);border:1px solid var(--bd);overflow:hidden;margin-bottom:10px;cursor:pointer;transition:transform .12s;animation:su .2s ease both}.wc:active{transform:scale(.984)}
 @keyframes su{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .wcb{height:3px}.wcb.r{background:var(--gr)}.wcb.c{background:var(--or)}.wcb.h{background:var(--pu)}.wcb.x{background:var(--rd)}

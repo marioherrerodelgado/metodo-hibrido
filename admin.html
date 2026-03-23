@@ -712,7 +712,7 @@ async function bulkUpload() {
     try {
       await _fb.addDoc(_fb.collection(db,'wods'), w);
       ok++;
-    } catch(e) { fail++; }
+    } catch(e) { fail++; console.error('WOD upload error:', e.code, e.message); }
     const pct = Math.round(((i+1)/bulkWods.length)*100);
     document.getElementById('prog-fill').style.width = pct + '%';
     document.getElementById('prog-label').textContent = (i+1) + ' / ' + bulkWods.length + ' WODs subidos';

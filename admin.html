@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d1117">
+<title>IronHawk Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1117;--sf:#161b22;--sf2:#21262d;--bd:#30363d;--bd2:#444c56;
+  --t:#e6edf3;--t2:#8b949e;--t3:#484f58;
+  --bl:#58a6ff;--gr:#3fb950;--or:#d29922;--rd:#f85149;--pu:#bc8cff;
+  --r:10px;--rs:6px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:"DM Sans",-apple-system,sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-size:14px}
+
+/* LOGIN */
+#ls{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;padding:24px}
+#ls.h{display:none}
+.li{width:100%;max-width:380px;background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:32px}
+.li-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.li-ic{width:36px;height:36px;background:var(--bl);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.li-brand{font-size:15px;font-weight:700;color:var(--t)}
+.li-sub2{font-size:12px;color:var(--t2)}
+.li-title{font-size:22px;font-weight:700;color:var(--t);letter-spacing:-.5px;margin-bottom:4px}
+.li-desc{font-size:13px;color:var(--t2);margin-bottom:28px}
+.fi{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;font-family:"DM Sans",sans-serif;font-size:14px;color:var(--t);outline:none;margin-bottom:12px;transition:border-color .15s}
+.fi:focus{border-color:var(--bl)}
+.btn-primary{width:100%;background:var(--bl);border:none;color:#0d1117;border-radius:var(--rs);padding:11px;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn-primary:hover{opacity:.9}
+.btn-primary:active{opacity:.75}
+.li-err{font-size:12px;color:var(--rd);margin-top:10px;display:none}
+.li-err.show{display:block}
+
+/* SHELL */
+#app{display:none}
+#app.on{display:flex;min-height:100vh;flex-direction:column}
+
+/* TOP BAR */
+.topbar{background:var(--sf);border-bottom:1px solid var(--bd);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-ic{width:28px;height:28px;background:var(--bl);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.tb-name{font-size:14px;font-weight:700;color:var(--t)}
+.tb-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;background:rgba(88,166,255,.15);color:var(--bl);letter-spacing:.5px;text-transform:uppercase}
+.tb-logout{font-size:12px;color:var(--t2);cursor:pointer;padding:6px 10px;border-radius:var(--rs);border:1px solid var(--bd);transition:all .15s}
+.tb-logout:hover{border-color:var(--bd2);color:var(--t)}
+
+/* TABS */
+.tabs{background:var(--sf);border-bottom:1px solid var(--bd);display:flex;padding:0 24px;gap:0;overflow-x:auto}
+.tab{padding:12px 16px;font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.tab.on{color:var(--bl);border-bottom-color:var(--bl)}
+.tab:hover:not(.on){color:var(--t)}
+
+/* MAIN */
+.main{flex:1;padding:24px;max-width:900px;margin:0 auto;width:100%}
+.section{display:none}
+.section.on{display:block}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+.fg-full{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:6px}
+.lbl{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
+.lbl span{color:var(--rd)}
+.fi2{background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;font-family:"DM Sans",sans-serif;font-size:14px;color:var(--t);outline:none;width:100%;transition:border-color .15s}
+.fi2:focus{border-color:var(--bl)}
+.fi2.ta{min-height:80px;resize:vertical;line-height:1.55}
+select.fi2{cursor:pointer}
+.fi2 option{background:var(--sf)}
+.hint{font-size:11px;color:var(--t3)}
+
+/* SPORT SELECTOR */
+.sport-sel{display:flex;gap:8px;flex-wrap:wrap}
+.sport-opt{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);color:var(--t2);transition:all .15s;background:transparent}
+.sport-opt:hover{border-color:var(--bd2)}
+.sport-opt.on[data-sp=running]{background:rgba(63,185,80,.15);color:var(--gr);border-color:var(--gr)}
+.sport-opt.on[data-sp=crossfit]{background:rgba(248,81,73,.15);color:var(--rd);border-color:var(--rd)}
+.sport-opt.on[data-sp=hyrox]{background:rgba(188,140,255,.15);color:var(--pu);border-color:var(--pu)}
+.sport-opt.on[data-sp=deka]{background:rgba(210,153,34,.15);color:var(--or);border-color:var(--or)}
+
+/* CARD */
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:20px;margin-bottom:20px}
+.card-title{font-size:15px;font-weight:700;color:var(--t);letter-spacing:-.3px;margin-bottom:4px}
+.card-sub{font-size:12px;color:var(--t2);margin-bottom:18px}
+.divider{height:1px;background:var(--bd);margin:18px 0}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.btn{padding:9px 16px;border-radius:var(--rs);font-family:"DM Sans",sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;border:1px solid transparent;display:inline-flex;align-items:center;gap:6px}
+.btn-g{background:var(--gr);color:#0d1117;border-color:var(--gr)}
+.btn-g:hover{opacity:.85}
+.btn-b{background:transparent;color:var(--bl);border-color:var(--bl)}
+.btn-b:hover{background:rgba(88,166,255,.1)}
+.btn-r{background:transparent;color:var(--rd);border-color:var(--rd)}
+.btn-r:hover{background:rgba(248,81,73,.1)}
+.btn:active{opacity:.7}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* STATUS */
+.status{padding:10px 14px;border-radius:var(--rs);font-size:13px;font-weight:500;display:none;margin-top:14px;border:1px solid}
+.status.show{display:flex;align-items:center;gap:8px}
+.status.ok{background:rgba(63,185,80,.08);color:var(--gr);border-color:rgba(63,185,80,.3)}
+.status.err{background:rgba(248,81,73,.08);color:var(--rd);border-color:rgba(248,81,73,.3)}
+.status.loading{background:rgba(88,166,255,.08);color:var(--bl);border-color:rgba(88,166,255,.3)}
+
+/* DROPZONE */
+.dropzone{border:2px dashed var(--bd);border-radius:var(--r);padding:40px 24px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.dropzone:hover,.dropzone.over{border-color:var(--bl);background:rgba(88,166,255,.05)}
+.dropzone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.dz-ic{font-size:32px;margin-bottom:10px}
+.dz-title{font-size:15px;font-weight:600;color:var(--t);margin-bottom:4px}
+.dz-sub{font-size:13px;color:var(--t2)}
+
+/* TABLE */
+.prev-wrap{overflow-x:auto;margin-top:16px;border:1px solid var(--bd);border-radius:var(--rs)}
+table.prev{width:100%;border-collapse:collapse;font-size:12px}
+table.prev th{background:var(--sf2);padding:8px 10px;text-align:left;font-weight:600;color:var(--t2);text-transform:uppercase;font-size:10px;letter-spacing:.5px;border-bottom:1px solid var(--bd);white-space:nowrap}
+table.prev td{padding:8px 10px;border-bottom:1px solid var(--bd);color:var(--t);vertical-align:top;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+table.prev tr:last-child td{border-bottom:none}
+table.prev tr:hover td{background:var(--sf2)}
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-or{background:rgba(210,153,34,.15);color:var(--or)}
+.badge-gr{background:rgba(63,185,80,.15);color:var(--gr)}
+.badge-bl{background:rgba(88,166,255,.15);color:var(--bl)}
+.badge-rd{background:rgba(248,81,73,.15);color:var(--rd)}
+.badge-pu{background:rgba(188,140,255,.15);color:var(--pu)}
+
+/* WOD LIST */
+.wod-row{background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;transition:border-color .15s}
+.wod-row:hover{border-color:var(--bd2)}
+.wr-date{font-size:12px;font-weight:700;color:var(--t2);min-width:88px;font-variant-numeric:tabular-nums}
+.wr-title{flex:1;font-size:13px;font-weight:500;color:var(--t)}
+.wr-sede{font-size:11px;color:var(--t3)}
+.wr-del{padding:5px 10px;background:transparent;border:1px solid var(--bd);border-radius:var(--rs);font-size:11px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .15s;flex-shrink:0}
+.wr-del:hover{border-color:var(--rd);color:var(--rd);background:rgba(248,81,73,.08)}
+.empty{text-align:center;padding:40px 20px;color:var(--t3);font-size:13px}
+.filter-row2{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.pill{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;background:var(--sf2);border:1px solid var(--bd);color:var(--t2);cursor:pointer;transition:all .15s}
+.pill.on{background:var(--bl);color:#0d1117;border-color:var(--bl)}
+.pill:hover:not(.on){border-color:var(--bd2);color:var(--t)}
+
+/* PROGRESS */
+.prog-wrap{margin-top:14px;display:none}
+.prog-wrap.show{display:block}
+.prog-bar{height:4px;background:var(--bd);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.prog-fill{height:100%;background:var(--bl);transition:width .3s;border-radius:2px}
+.prog-label{font-size:12px;color:var(--t2)}
+
+/* SECTION HEADER */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.sec-hdr-title{font-size:18px;font-weight:700;color:var(--t);letter-spacing:-.4px}
+.sec-hdr-sub{font-size:12px;color:var(--t2);margin-top:2px}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-ov.open{display:flex}
+.modal-box{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:24px;max-width:380px;width:100%;animation:pop .2s ease}
+@keyframes pop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+.modal-title{font-size:16px;font-weight:700;color:var(--t);margin-bottom:8px}
+.modal-msg{font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:20px}
+.modal-btns{display:flex;gap:10px;justify-content:flex-end}
+
+/* SPORT DOT */
+.sp-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.sp-dot.running{background:var(--gr)}.sp-dot.crossfit{background:var(--rd)}.sp-dot.hyrox{background:var(--pu)}.sp-dot.deka{background:var(--or)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="ls">
+  <div class="li">
+    <div class="li-logo">
+      <div class="li-ic"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 7h3V4.5h4V7h3v5h-3v2.5H7V12H4z" stroke="white" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M2 8h2M14 8h2M2 10h2M14 10h2" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div><div class="li-brand">IronHawk Vicalvaro</div><div class="li-sub2">Panel de administracion</div></div>
+    </div>
+    <div class="li-title">Acceso Admin</div>
+    <div class="li-desc">Introduce la contrasena de administrador para continuar.</div>
+    <label style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px">Contrasena</label>
+    <input type="password" class="fi" id="ac" placeholder="Contrasena admin" onkeydown="if(event.key==='Enter')dL()">
+    <button class="btn-primary" onclick="dL()">Entrar al panel</button>
+    <div class="li-err" id="le">Contrasena incorrecta.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 6h2.5V4h4v2h2.5v4.5h-2.5V11H6V10.5H3.5z" stroke="#0d1117" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M1.5 7h2M12.5 7h2M1.5 9h2M12.5 9h2" stroke="#0d1117" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="tb-name">IronHawk Admin</span>
+      <span class="tb-badge">v2.0</span>
+    </div>
+    <div class="tb-logout" onclick="logout()">Cerrar sesion</div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab on" id="tab-add" onclick="swTab('add')">Subir WOD</div>
+    <div class="tab" id="tab-bulk" onclick="swTab('bulk')">Carga masiva</div>
+    <div class="tab" id="tab-list" onclick="swTab('list')">Ver / Eliminar</div>
+  </div>
+
+  <div class="main">
+
+    <!-- TAB: SUBIR WOD -->
+    <div class="section on" id="sec-add">
+      <div class="sec-hdr">
+        <div><div class="sec-hdr-title">Subir WOD individual</div><div class="sec-hdr-sub">Rellena los campos y guarda en Firebase</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Deporte</div>
+        <div class="card-sub">Selecciona el tipo de entrenamiento</div>
+        <div class="sport-sel" id="sport-sel">
+          <div class="sport-opt on" data-sp="running" onclick="selSport('running',this)">Running</div>
+          <div class="sport-opt" data-sp="crossfit" onclick="selSport('crossfit',this)">CrossFit</div>
+          <div class="sport-opt" data-sp="hyrox" onclick="selSport('hyrox',this)">Hyrox</div>
+          <div class="sport-opt" data-sp="deka" onclick="selSport('deka',this)">DEKA</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Informacion basica</div>
+        <div class="card-sub">Campos obligatorios para mostrar el WOD en la app</div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="lbl">Fecha <span>*</span></label>
+            <input type="date" class="fi2" id="f-fecha">
+          </div>
+          <div class="field">
+            <label class="lbl">Sede / Lugar</label>
+            <select class="fi2" id="f-sede">
+              <option value="">Selecciona sede...</option>
+              <option>Retiro (Pta Alcala)</option>
+              <option>Sanchinarro (Valdebebas)</option>
+              <option>Juan Carlos I</option>
+              <option>Parque Juan Carlos I</option>
+              <option>Madrid</option>
+              <option>Box IronHawk</option>
+              <option>Libre</option>
+            </select>
+          </div>
+          <div class="field fg-full">
+            <label class="lbl">Titulo del entrenamiento <span>*</span></label>
+            <input type="text" class="fi2" id="f-titulo" placeholder="ej: Strength + BREATH — Lunes Box">
+          </div>
+          <div class="field">
+            <label class="lbl">Tipo</label>
+            <select class="fi2" id="f-type">
+              <option value="">Selecciona tipo...</option>
+              <optgroup label="Running">
+                <option>Series</option>
+                <option>Rodaje controlado</option>
+                <option>Rodaje regenerativo</option>
+                <option>Fartlek + Series</option>
+                <option>Competicion</option>
+              </optgroup>
+              <optgroup label="CrossFit">
+                <option>Strength + BREATH</option>
+                <option>BREATH</option>
+                <option>TONE + BREATH</option>
+                <option>OLY + BREATH</option>
+                <option>Active Recovery</option>
+                <option>BREATH Sustain</option>
+              </optgroup>
+              <optgroup label="Hyrox / DEKA">
+                <option>Hyrox Simulation</option>
+                <option>DEKA FIT Prep</option>
+                <option>Hybrid Endurance</option>
+                <option>Functional Running</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="field">
+            <label class="lbl">Intensidad</label>
+            <select class="fi2" id="f-intensity">
+              <option value="media">Moderado</option>
+              <option value="baja">Suave</option>
+              <option value="alta">Exigente</option>
+              <option value="maxima">Maxima</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="lbl">Duracion</label>
+            <input type="text" class="fi2" id="f-duration" placeholder="ej: 60'">
+          </div>
+          <div class="field">
+            <label class="lbl">Volumen</label>
+            <select class="fi2" id="f-volume">
+              <option value="">—</option>
+              <option>Bajo</option>
+              <option>Medio</option>
+              <option>Alto</option>
+              <option>Muy alto</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Contenido del entrenamiento</div>
+        <div class="card-sub">Usa una linea por ejercicio / instruccion</div>
+        <div class="form-grid">
+          <div class="field fg-full">
+            <label class="lbl">Nota del entrenador</label>
+            <textarea class="fi2 ta" id="f-notes" placeholder="Observaciones, contexto, consejos..."></textarea>
+          </div>
+          <div class="field">
+            <label class="lbl">Calentamiento / MOVE</label>
+            <textarea class="fi2 ta" id="f-warmup" placeholder="Movilidad, activacion..."></textarea>
+          </div>
+          <div class="field">
+            <label class="lbl">Parte principal <span>*</span></label>
+            <textarea class="fi2 ta" id="f-main" placeholder="Strength, BREATH, WOD..."></textarea>
+          </div>
+          <div class="field">
+            <label class="lbl">MetCon / Finisher</label>
+            <textarea class="fi2 ta" id="f-metcon" placeholder="Opcional..."></textarea>
+          </div>
+          <div class="field">
+            <label class="lbl">Vuelta a la calma</label>
+            <textarea class="fi2 ta" id="f-cooldown" placeholder="Estiramientos, foam roller..."></textarea>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-g" onclick="saveWod()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Guardar en Firebase
+          </button>
+          <button class="btn btn-b" onclick="clearForm()">Limpiar</button>
+        </div>
+        <div class="status" id="st-add"></div>
+      </div>
+    </div>
+
+    <!-- TAB: CARGA MASIVA -->
+    <div class="section" id="sec-bulk">
+      <div class="sec-hdr">
+        <div><div class="sec-hdr-title">Carga masiva desde Excel / CSV</div><div class="sec-hdr-sub">Sube el fichero .xlsx con columna <code>sport</code></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">1. Selecciona el archivo</div>
+        <div class="card-sub">Columnas: fecha, month, <strong>sport</strong>, sede, titulo, intensity, duration, volume, type, notes, warmup, main, metcon, cooldown</div>
+        <div class="dropzone" id="dz" ondragover="dzOver(event)" ondragleave="dzLeave()" ondrop="dzDrop(event)">
+          <input type="file" accept=".xlsx,.xls,.csv" onchange="dzFile(this)">
+          <div class="dz-ic">📊</div>
+          <div class="dz-title">Arrastra el Excel aqui</div>
+          <div class="dz-sub">o haz clic para seleccionar · .xlsx / .csv</div>
+        </div>
+        <div class="status" id="st-parse"></div>
+      </div>
+
+      <div id="preview-section" style="display:none">
+        <div class="card">
+          <div class="card-title">2. Vista previa</div>
+          <div class="card-sub" id="prev-count">0 WODs encontrados</div>
+          <div class="prev-wrap"><table class="prev" id="prev-table"><thead></thead><tbody></tbody></table></div>
+        </div>
+        <div class="card">
+          <div class="card-title">3. Subir a Firebase</div>
+          <div class="card-sub">Se crearan los WODs en la coleccion <code>wods</code></div>
+          <div class="btn-row">
+            <button class="btn btn-g" id="btn-upload" onclick="bulkUpload()">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 4l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 10v1a1 1 0 001 1h8a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Subir todos a Firebase
+            </button>
+            <button class="btn btn-b" onclick="clearBulk()">Cancelar</button>
+          </div>
+          <div class="prog-wrap" id="prog-wrap">
+            <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+            <div class="prog-label" id="prog-label">Subiendo...</div>
+          </div>
+          <div class="status" id="st-bulk"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: VER / ELIMINAR -->
+    <div class="section" id="sec-list">
+      <div class="sec-hdr">
+        <div><div class="sec-hdr-title">WODs en Firebase</div><div class="sec-hdr-sub">Gestiona los entrenamientos subidos</div></div>
+        <button class="btn btn-b" onclick="loadList()">Actualizar</button>
+      </div>
+      <div class="filter-row2" id="list-filters">
+        <div class="pill on" data-m="all" onclick="setMF('all',this)">Todos</div>
+      </div>
+      <div class="filter-row2" id="sport-list-filters">
+        <div class="pill on" data-sf="all" onclick="setSportFilter('all',this)">Todos</div>
+        <div class="pill" data-sf="running" onclick="setSportFilter('running',this)">Running</div>
+        <div class="pill" data-sf="crossfit" onclick="setSportFilter('crossfit',this)">CrossFit</div>
+        <div class="pill" data-sf="hyrox" onclick="setSportFilter('hyrox',this)">Hyrox</div>
+        <div class="pill" data-sf="deka" onclick="setSportFilter('deka',this)">DEKA</div>
+      </div>
+      <div id="wod-list"><div class="empty">Cargando...</div></div>
+      <div class="status" id="st-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-ov" id="modal-ov">
+  <div class="modal-box">
+    <div class="modal-title" id="modal-title">Eliminar WOD?</div>
+    <div class="modal-msg" id="modal-msg">Esta accion no se puede deshacer.</div>
+    <div class="modal-btns">
+      <button class="btn btn-b" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-r" id="modal-confirm">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const ADMIN_PWD = "ironhawk";
+const FB_CFG = {
+  apiKey:"AIzaSyBtMJBfDEwjV9tOZowC4LAoTPjp2rZFO4U",
+  authDomain:"mariohyrox.firebaseapp.com",
+  projectId:"mariohyrox",
+  storageBucket:"mariohyrox.firebasestorage.app",
+  messagingSenderId:"23933117714",
+  appId:"1:23933117714:web:b1ced10a2fdfef3eb6bfcb"
+};
+
+let db = null, _fb = null;
+let bulkWods = [], allWods = [], listFilter = 'all', sportListFilter = 'all';
+let selectedSport = 'running';
+
+// ── LOGIN ──
+function dL() {
+  const v = document.getElementById('ac').value;
+  if (v === ADMIN_PWD) {
+    localStorage.setItem('ih_admin','1');
+    document.getElementById('ls').classList.add('h');
+    document.getElementById('app').classList.add('on');
+    initAdmin();
+  } else {
+    document.getElementById('le').classList.add('show');
+  }
+}
+function logout() {
+  localStorage.removeItem('ih_admin');
+  location.reload();
+}
+if (localStorage.getItem('ih_admin') === '1') {
+  document.getElementById('ls').classList.add('h');
+  document.getElementById('app').classList.add('on');
+  window.addEventListener('load', initAdmin);
+}
+
+// ── SPORT SELECTOR ──
+function selSport(sp, el) {
+  selectedSport = sp;
+  document.querySelectorAll('#sport-sel .sport-opt').forEach(o => o.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// ── INIT ──
+async function initAdmin() {
+  try {
+    const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+    const { getFirestore, collection, query, orderBy, getDocs, addDoc, setDoc, deleteDoc, doc, where } =
+      await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    db = getFirestore(initializeApp(FB_CFG));
+    _fb = { collection, query, orderBy, getDocs, addDoc, setDoc, deleteDoc, doc, where };
+    showStatus('st-add', 'ok', 'Conectado a Firebase');
+    setTimeout(() => hideStatus('st-add'), 2500);
+    loadList();
+  } catch(e) {
+    showStatus('st-add', 'err', 'Sin conexion Firebase: ' + e.message);
+  }
+}
+
+// ── TABS ──
+function swTab(t) {
+  ['add','bulk','list'].forEach(x => {
+    document.getElementById('tab-'+x).classList.remove('on');
+    document.getElementById('sec-'+x).classList.remove('on');
+  });
+  document.getElementById('tab-'+t).classList.add('on');
+  document.getElementById('sec-'+t).classList.add('on');
+  if (t === 'list') loadList();
+}
+
+// ── SAVE INDIVIDUAL ──
+async function saveWod() {
+  const fecha = document.getElementById('f-fecha').value;
+  const titulo = document.getElementById('f-titulo').value.trim();
+  const main = document.getElementById('f-main').value.trim();
+  if (!fecha || !titulo || !main) {
+    showStatus('st-add','err','Completa los campos obligatorios: fecha, titulo y parte principal.');
+    return;
+  }
+  if (!db) { showStatus('st-add','err','No hay conexion con Firebase.'); return; }
+  const month = fecha.slice(0,7);
+  const wod = {
+    fecha, month,
+    sport: selectedSport,
+    sede: document.getElementById('f-sede').value || '',
+    titulo,
+    intensity: document.getElementById('f-intensity').value || 'media',
+    duration: document.getElementById('f-duration').value.trim(),
+    volume: document.getElementById('f-volume').value,
+    type: document.getElementById('f-type').value,
+    notes: document.getElementById('f-notes').value.trim(),
+    warmup: document.getElementById('f-warmup').value.trim(),
+    main,
+    metcon: document.getElementById('f-metcon').value.trim(),
+    cooldown: document.getElementById('f-cooldown').value.trim(),
+  };
+  Object.keys(wod).forEach(k => { if (wod[k] === '') delete wod[k]; });
+  wod.fecha = fecha; wod.month = month; wod.sport = selectedSport;
+  showStatus('st-add','loading','Guardando...');
+  try {
+    await _fb.addDoc(_fb.collection(db,'wods'), wod);
+    showStatus('st-add','ok','WOD de ' + selectedSport + ' guardado correctamente');
+    clearForm();
+  } catch(e) {
+    showStatus('st-add','err','Error: ' + e.message);
+  }
+}
+
+function clearForm() {
+  ['f-fecha','f-sede','f-titulo','f-type','f-duration','f-volume','f-notes','f-warmup','f-main','f-metcon','f-cooldown']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  document.getElementById('f-intensity').value = 'media';
+}
+
+// ── EXCEL PARSE ──
+function dzOver(e) { e.preventDefault(); document.getElementById('dz').classList.add('over'); }
+function dzLeave() { document.getElementById('dz').classList.remove('over'); }
+function dzDrop(e) { e.preventDefault(); dzLeave(); const f = e.dataTransfer.files[0]; if(f) parseExcel(f); }
+function dzFile(inp) { if(inp.files[0]) parseExcel(inp.files[0]); }
+
+function parseExcel(file) {
+  showStatus('st-parse','loading','Leyendo archivo...');
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result, { type:'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { defval:'' });
+      const wods = rows.filter(r => r.fecha && String(r.fecha).match(/\d{4}-\d{2}-\d{2}/)).map(r => {
+        const w = {};
+        const map = {
+          fecha:'fecha',month:'month',sport:'sport',sede:'sede',titulo:'titulo',
+          intensity:'intensity',duration:'duration',volume:'volume',type:'type',
+          notes:'notes',warmup:'warmup',main:'main',metcon:'metcon',cooldown:'cooldown'
+        };
+        Object.entries(map).forEach(([k,v]) => { if (r[v] !== undefined && r[v] !== '') w[k] = String(r[v]).trim(); });
+        // Fallback columns
+        if (!w.sport) w.sport = r['Deporte'] ? String(r['Deporte']).trim().toLowerCase() : 'running';
+        if (!w.month && w.fecha) w.month = w.fecha.slice(0,7);
+        return w;
+      }).filter(w => w.fecha && w.titulo);
+
+      if (!wods.length) { showStatus('st-parse','err','No se encontraron WODs validos.'); return; }
+      bulkWods = wods;
+      showStatus('st-parse','ok', wods.length + ' WODs encontrados');
+      renderPreview(wods);
+    } catch(err) {
+      showStatus('st-parse','err','Error al leer: ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function renderPreview(wods) {
+  document.getElementById('preview-section').style.display = 'block';
+  document.getElementById('prev-count').textContent = wods.length + ' WODs encontrados';
+  const iMap = {baja:'badge-gr',media:'badge-bl',alta:'badge-or',maxima:'badge-rd'};
+  const spMap = {running:'badge-gr',crossfit:'badge-rd',hyrox:'badge-pu',deka:'badge-or'};
+  let thead = '<tr><th>Fecha</th><th>Deporte</th><th>Sede</th><th>Titulo</th><th>Tipo</th><th>Int.</th><th>Dur.</th></tr>';
+  let tbody = wods.map(w =>
+    '<tr><td>'+( w.fecha||'')+'</td><td><span class="badge '+(spMap[w.sport]||'badge-bl')+'">'+(w.sport||'—')+'</span></td><td>'+(w.sede||'')+'</td><td>'+(w.titulo||'')+'</td><td>'+(w.type||'')+'</td>'
+    + '<td><span class="badge '+(iMap[w.intensity]||'badge-bl')+'">'+(w.intensity||'—')+'</span></td>'
+    + '<td>'+(w.duration||'—')+'</td></tr>'
+  ).join('');
+  document.getElementById('prev-table').querySelector('thead').innerHTML = thead;
+  document.getElementById('prev-table').querySelector('tbody').innerHTML = tbody;
+}
+
+// ── BULK UPLOAD ──
+async function bulkUpload() {
+  if (!db || !_fb) { showStatus('st-bulk','err','Sin conexion Firebase.'); return; }
+  if (!bulkWods.length) { showStatus('st-bulk','err','No hay WODs para subir.'); return; }
+  document.getElementById('btn-upload').disabled = true;
+  document.getElementById('prog-wrap').classList.add('show');
+  showStatus('st-bulk','loading','Subiendo...');
+  let ok = 0, fail = 0;
+  for (let i = 0; i < bulkWods.length; i++) {
+    const w = { ...bulkWods[i] };
+    Object.keys(w).forEach(k => { if (w[k] === '' || w[k] === undefined) delete w[k]; });
+    try {
+      await _fb.addDoc(_fb.collection(db,'wods'), w);
+      ok++;
+    } catch(e) { fail++; }
+    const pct = Math.round(((i+1)/bulkWods.length)*100);
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-label').textContent = (i+1) + ' / ' + bulkWods.length + ' WODs subidos';
+  }
+  document.getElementById('btn-upload').disabled = false;
+  if (fail === 0) {
+    showStatus('st-bulk','ok', ok + ' WODs subidos correctamente a Firebase');
+  } else {
+    showStatus('st-bulk','err', ok + ' subidos, ' + fail + ' fallaron.');
+  }
+}
+
+function clearBulk() {
+  bulkWods = [];
+  document.getElementById('preview-section').style.display = 'none';
+  document.getElementById('prog-wrap').classList.remove('show');
+  hideStatus('st-bulk'); hideStatus('st-parse');
+  document.getElementById('prog-fill').style.width = '0%';
+}
+
+// ── LIST ──
+async function loadList() {
+  if (!db || !_fb) { document.getElementById('wod-list').innerHTML = '<div class="empty">Sin conexion Firebase</div>'; return; }
+  document.getElementById('wod-list').innerHTML = '<div class="empty">Cargando...</div>';
+  try {
+    const snap = await _fb.getDocs(_fb.query(_fb.collection(db,'wods'), _fb.orderBy('fecha','asc')));
+    allWods = [];
+    snap.forEach(d => allWods.push({ id:d.id, ...d.data() }));
+    buildMonthFilters();
+    renderList();
+  } catch(e) {
+    document.getElementById('wod-list').innerHTML = '<div class="empty">Error: ' + e.message + '</div>';
+  }
+}
+
+function buildMonthFilters() {
+  const months = [...new Set(allWods.map(w => w.month||w.fecha?.slice(0,7)||'').filter(Boolean))].sort();
+  const MN = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  let html = '<div class="pill on" data-m="all" onclick="setMF(\'all\',this)">Todos</div>';
+  months.forEach(m => {
+    const [y,mo] = m.split('-');
+    html += '<div class="pill" data-m="'+m+'" onclick="setMF(\''+m+'\',this)">'+MN[parseInt(mo)-1]+' '+y+'</div>';
+  });
+  document.getElementById('list-filters').innerHTML = html;
+}
+
+function setMF(m, el) {
+  listFilter = m;
+  document.querySelectorAll('#list-filters .pill').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  renderList();
+}
+
+function setSportFilter(sf, el) {
+  sportListFilter = sf;
+  document.querySelectorAll('#sport-list-filters .pill').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  renderList();
+}
+
+function renderList() {
+  let filtered = listFilter === 'all' ? allWods : allWods.filter(w => (w.month||w.fecha?.slice(0,7)) === listFilter);
+  if (sportListFilter !== 'all') {
+    filtered = filtered.filter(w => (w.sport||'running') === sportListFilter);
+  }
+  if (!filtered.length) { document.getElementById('wod-list').innerHTML = '<div class="empty">No hay WODs con ese filtro</div>'; return; }
+  const spMap = {running:'badge-gr',crossfit:'badge-rd',hyrox:'badge-pu',deka:'badge-or'};
+  document.getElementById('wod-list').innerHTML = filtered.map(w =>
+    '<div class="wod-row">'
+    + '<span class="wr-date">'+(w.fecha||'')+'</span>'
+    + '<span class="badge '+(spMap[w.sport||'running']||'badge-bl')+'" style="margin-right:6px;min-width:60px;justify-content:center">'+(w.sport||'running')+'</span>'
+    + '<div style="flex:1;min-width:0">'
+    + '<div class="wr-title">'+(w.titulo||w.title||'Sin titulo')+'</div>'
+    + '<div class="wr-sede">'+(w.sede||'')+' '+(w.type?'· '+w.type:'')+'</div>'
+    + '</div>'
+    + '<button class="wr-del" onclick="confirmDel(\''+w.id+'\',\''+( w.titulo||w.title||'').replace(/'/g,"\\'")+'\')">Eliminar</button>'
+    + '</div>'
+  ).join('');
+}
+
+// ── DELETE ──
+let pendingDelId = null;
+function confirmDel(id, title) {
+  pendingDelId = id;
+  document.getElementById('modal-title').textContent = 'Eliminar WOD';
+  document.getElementById('modal-msg').innerHTML = 'Eliminar <strong>'+title+'</strong>?<br>Esta accion no se puede deshacer.';
+  document.getElementById('modal-confirm').onclick = () => doDelete();
+  document.getElementById('modal-ov').classList.add('open');
+}
+function closeModal() { document.getElementById('modal-ov').classList.remove('open'); pendingDelId = null; }
+async function doDelete() {
+  closeModal();
+  if (!pendingDelId || !db || !_fb) return;
+  try {
+    await _fb.deleteDoc(_fb.doc(db,'wods',pendingDelId));
+    allWods = allWods.filter(w => w.id !== pendingDelId);
+    buildMonthFilters();
+    renderList();
+    showStatus('st-list','ok','WOD eliminado');
+    setTimeout(()=>hideStatus('st-list'),2500);
+  } catch(e) {
+    showStatus('st-list','err','Error al eliminar: '+e.message);
+  }
+  pendingDelId = null;
+}
+
+// ── HELPERS ──
+function showStatus(id, type, msg) {
+  const el = document.getElementById(id);
+  el.className = 'status show ' + type;
+  el.textContent = msg;
+}
+function hideStatus(id) { document.getElementById(id).className = 'status'; }
+
+window.dL=dL; window.logout=logout; window.swTab=swTab; window.saveWod=saveWod; window.clearForm=clearForm;
+window.dzOver=dzOver; window.dzLeave=dzLeave; window.dzDrop=dzDrop; window.dzFile=dzFile;
+window.bulkUpload=bulkUpload; window.clearBulk=clearBulk;
+window.loadList=loadList; window.setMF=setMF; window.setSportFilter=setSportFilter;
+window.confirmDel=confirmDel; window.closeModal=closeModal; window.selSport=selSport;
+</script>
+</body>
+</html>

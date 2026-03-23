@@ -201,6 +201,7 @@ table.prev tr:hover td{background:var(--sf2)}
     <div class="tab on" id="tab-add" onclick="swTab('add')">Subir WOD</div>
     <div class="tab" id="tab-bulk" onclick="swTab('bulk')">Carga masiva</div>
     <div class="tab" id="tab-list" onclick="swTab('list')">Ver / Eliminar</div>
+      <div class="tab" id="tab-comp" onclick="swTab('comp')">🏁 Competiciones</div>
   </div>
 
   <div class="main">
@@ -399,6 +400,113 @@ table.prev tr:hover td{background:var(--sf2)}
       <div class="status" id="st-list"></div>
     </div>
 
+    <!-- TAB: COMPETICIONES -->
+    <div class="section" id="sec-comp">
+      <div class="sec-hdr">
+        <div><div class="sec-hdr-title">Competiciones</div><div class="sec-hdr-sub">Gestiona las competiciones de la app</div></div>
+      </div>
+
+      <!-- INDIVIDUAL -->
+      <div class="card">
+        <div class="card-title">Añadir competición</div>
+        <div class="card-sub">Rellena los campos y guarda en Firebase</div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="lbl">Fecha <span>*</span></label>
+            <input type="date" class="fi2" id="c-fecha">
+          </div>
+          <div class="field">
+            <label class="lbl">Categoría</label>
+            <select class="fi2" id="c-cat">
+              <option value="running">Running</option>
+              <option value="hyrox">Hyrox</option>
+              <option value="deka">DEKA</option>
+              <option value="crossfit">CrossFit</option>
+            </select>
+          </div>
+          <div class="field fg-full">
+            <label class="lbl">Nombre <span>*</span></label>
+            <input type="text" class="fi2" id="c-name" placeholder="ej: Maratón de Madrid">
+          </div>
+          <div class="field">
+            <label class="lbl">Distancia / Formato</label>
+            <input type="text" class="fi2" id="c-dist" placeholder="ej: 5 y 10 km">
+          </div>
+          <div class="field">
+            <label class="lbl">Lugar</label>
+            <input type="text" class="fi2" id="c-lugar" placeholder="ej: Madrid">
+          </div>
+          <div class="field fg-full">
+            <label class="lbl">Nota (opcional)</label>
+            <input type="text" class="fi2" id="c-note" placeholder="ej: 22-24 may · inscripción abierta">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-g" onclick="saveComp()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Guardar competición
+          </button>
+          <button class="btn btn-b" onclick="clearCompForm()">Limpiar</button>
+        </div>
+        <div class="status" id="st-comp-add"></div>
+      </div>
+
+      <!-- CARGA MASIVA -->
+      <div class="card">
+        <div class="card-title">Carga masiva desde Excel</div>
+        <div class="card-sub">Columnas obligatorias: <strong>date</strong> (YYYY-MM-DD), <strong>name</strong> · Opcionales: <strong>dist</strong>, <strong>lugar</strong>, <strong>cat</strong> (running/hyrox/deka/crossfit), <strong>note</strong></div>
+        <div class="dropzone" id="dz-comp" ondragover="dzCompOver(event)" ondragleave="dzCompLeave()" ondrop="dzCompDrop(event)">
+          <input type="file" accept=".xlsx,.xls" onchange="dzCompFile(this)">
+          <div class="dz-ic">🏁</div>
+          <div class="dz-title">Arrastra el Excel de competiciones</div>
+          <div class="dz-sub">o haz clic · .xlsx</div>
+        </div>
+        <div class="status" id="st-comp-parse"></div>
+      </div>
+
+      <div id="comp-preview-section" style="display:none">
+        <div class="card">
+          <div class="card-title">Vista previa</div>
+          <div class="card-sub" id="comp-prev-count">0 competiciones encontradas</div>
+          <div class="prev-wrap"><table class="prev" id="comp-prev-table"><thead></thead><tbody></tbody></table></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Subir a Firebase</div>
+          <div class="card-sub">Se guardarán en la colección <code>competiciones</code></div>
+          <div class="btn-row">
+            <button class="btn btn-g" id="btn-comp-upload" onclick="bulkUploadComps()">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 4l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 10v1a1 1 0 001 1h8a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Subir todas a Firebase
+            </button>
+            <button class="btn btn-b" onclick="clearCompBulk()">Cancelar</button>
+          </div>
+          <div class="prog-wrap" id="prog-wrap-comp">
+            <div class="prog-bar"><div class="prog-fill" id="prog-fill-comp" style="width:0%"></div></div>
+            <div class="prog-label" id="prog-label-comp">Subiendo...</div>
+          </div>
+          <div class="status" id="st-comp-bulk"></div>
+        </div>
+      </div>
+
+      <!-- LISTA -->
+      <div class="card">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span>Competiciones en Firebase</span>
+          <button class="btn btn-b" onclick="loadCompList()">↻ Actualizar</button>
+        </div>
+        <div class="card-sub">Filtrar por categoría</div>
+        <div class="filter-row2" id="comp-cat-filters" style="margin-top:8px">
+          <div class="pill on" data-cf="all" onclick="setCompCatF('all',this)">Todas</div>
+          <div class="pill" data-cf="running" onclick="setCompCatF('running',this)">Running</div>
+          <div class="pill" data-cf="hyrox" onclick="setCompCatF('hyrox',this)">Hyrox</div>
+          <div class="pill" data-cf="deka" onclick="setCompCatF('deka',this)">DEKA</div>
+          <div class="pill" data-cf="crossfit" onclick="setCompCatF('crossfit',this)">CrossFit</div>
+        </div>
+        <div id="comp-list" style="margin-top:12px"><div class="empty">Pulsa Actualizar para cargar</div></div>
+        <div class="status" id="st-comp-list"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -409,7 +517,7 @@ table.prev tr:hover td{background:var(--sf2)}
     <div class="modal-msg" id="modal-msg">Esta accion no se puede deshacer.</div>
     <div class="modal-btns">
       <button class="btn btn-b" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-r" id="modal-confirm">Eliminar</button>
+      <button class="btn btn-r" id="modal-confirm" onclick="doDelete()">Eliminar</button>
     </div>
   </div>
 </div>
@@ -462,10 +570,11 @@ function selSport(sp, el) {
 // ── INIT ──
 async function initAdmin() {
   try {
-    const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+    const { initializeApp, getApps, getApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
     const { getFirestore, collection, query, orderBy, getDocs, addDoc, setDoc, deleteDoc, doc, where } =
       await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-    db = getFirestore(initializeApp(FB_CFG));
+    const fbApp = getApps().length === 0 ? initializeApp(FB_CFG) : getApp();
+    db = getFirestore(fbApp);
     _fb = { collection, query, orderBy, getDocs, addDoc, setDoc, deleteDoc, doc, where };
     showStatus('st-add', 'ok', 'Conectado a Firebase');
     setTimeout(() => hideStatus('st-add'), 2500);
@@ -477,13 +586,14 @@ async function initAdmin() {
 
 // ── TABS ──
 function swTab(t) {
-  ['add','bulk','list'].forEach(x => {
+  ['add','bulk','list','comp'].forEach(x => {
     document.getElementById('tab-'+x).classList.remove('on');
     document.getElementById('sec-'+x).classList.remove('on');
   });
   document.getElementById('tab-'+t).classList.add('on');
   document.getElementById('sec-'+t).classList.add('on');
   if (t === 'list') loadList();
+  if (t === 'comp') loadCompList();
 }
 
 // ── SAVE INDIVIDUAL ──
@@ -690,19 +800,19 @@ function confirmDel(id, title) {
 }
 function closeModal() { document.getElementById('modal-ov').classList.remove('open'); pendingDelId = null; }
 async function doDelete() {
+  const idToDelete = pendingDelId;
   closeModal();
-  if (!pendingDelId || !db || !_fb) return;
+  if (!idToDelete || !db || !_fb) return;
   try {
-    await _fb.deleteDoc(_fb.doc(db,'wods',pendingDelId));
-    allWods = allWods.filter(w => w.id !== pendingDelId);
+    await _fb.deleteDoc(_fb.doc(db,'wods',idToDelete));
+    allWods = allWods.filter(w => w.id !== idToDelete);
     buildMonthFilters();
     renderList();
-    showStatus('st-list','ok','WOD eliminado');
+    showStatus('st-list','ok','✓ WOD eliminado');
     setTimeout(()=>hideStatus('st-list'),2500);
   } catch(e) {
     showStatus('st-list','err','Error al eliminar: '+e.message);
   }
-  pendingDelId = null;
 }
 
 // ── HELPERS ──
@@ -713,11 +823,192 @@ function showStatus(id, type, msg) {
 }
 function hideStatus(id) { document.getElementById(id).className = 'status'; }
 
+// ════════════════════════════════════════
+// COMPETICIONES
+// ════════════════════════════════════════
+let bulkComps = [], allComps = [], compCatFilter = 'all';
+
+async function saveComp() {
+  const fecha = document.getElementById('c-fecha').value;
+  const name  = document.getElementById('c-name').value.trim();
+  if (!fecha || !name) { showStatus('st-comp-add','err','Fecha y nombre son obligatorios.'); return; }
+  if (!db) { showStatus('st-comp-add','err','Sin conexión Firebase.'); return; }
+  const comp = {
+    date:  fecha,
+    name,
+    dist:  document.getElementById('c-dist').value.trim(),
+    lugar: document.getElementById('c-lugar').value.trim(),
+    cat:   document.getElementById('c-cat').value || 'running',
+    note:  document.getElementById('c-note').value.trim(),
+  };
+  Object.keys(comp).forEach(k => { if (!comp[k]) delete comp[k]; });
+  comp.date = fecha;
+  showStatus('st-comp-add','loading','Guardando...');
+  try {
+    await _fb.addDoc(_fb.collection(db,'competiciones'), comp);
+    showStatus('st-comp-add','ok','✓ Competición guardada');
+    clearCompForm();
+    loadCompList();
+  } catch(e) { showStatus('st-comp-add','err','Error: '+e.message); }
+}
+
+function clearCompForm() {
+  ['c-fecha','c-name','c-dist','c-lugar','c-note'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('c-cat').value = 'running';
+}
+
+function dzCompOver(e) { e.preventDefault(); document.getElementById('dz-comp').classList.add('over'); }
+function dzCompLeave() { document.getElementById('dz-comp').classList.remove('over'); }
+function dzCompDrop(e) { e.preventDefault(); dzCompLeave(); const f=e.dataTransfer.files[0]; if(f) parseCompExcel(f); }
+function dzCompFile(inp) { if(inp.files[0]) parseCompExcel(inp.files[0]); }
+
+function parseCompExcel(file) {
+  showStatus('st-comp-parse','loading','Leyendo archivo...');
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result, {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
+      const comps = rows.map(r => {
+        const get = (...keys) => { for(const k of keys){ if(r[k]!==undefined && String(r[k]).trim()!=='') return String(r[k]).trim(); } return ''; };
+        return {
+          date:  get('date','fecha','Fecha','Date'),
+          name:  get('name','nombre','Name','Nombre'),
+          dist:  get('dist','distancia','Dist','Distancia','Distancia / Formato'),
+          lugar: get('lugar','Lugar','location','Location'),
+          cat:   (get('cat','categoria','Cat','Categoria','category') || 'running').toLowerCase(),
+          note:  get('note','nota','Note','Nota'),
+        };
+      }).filter(c => c.date && c.date.match(/\d{4}-\d{2}-\d{2}/) && c.name);
+
+      if (!comps.length) { showStatus('st-comp-parse','err','No se encontraron competiciones válidas. Revisa las columnas (date, name).'); return; }
+      bulkComps = comps;
+      showStatus('st-comp-parse','ok','✓ '+comps.length+' competiciones encontradas');
+      renderCompPreview(comps);
+    } catch(err) { showStatus('st-comp-parse','err','Error al leer: '+err.message); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function renderCompPreview(comps) {
+  document.getElementById('comp-preview-section').style.display = 'block';
+  document.getElementById('comp-prev-count').textContent = comps.length + ' competiciones encontradas';
+  const spMap = {running:'badge-gr',crossfit:'badge-rd',hyrox:'badge-pu',deka:'badge-or'};
+  const thead = '<tr><th>Fecha</th><th>Cat</th><th>Nombre</th><th>Dist.</th><th>Lugar</th><th>Nota</th></tr>';
+  const tbody = comps.map(c =>
+    '<tr><td>'+c.date+'</td>'
+    +'<td><span class="badge '+(spMap[c.cat]||'badge-bl')+'">'+c.cat+'</span></td>'
+    +'<td>'+c.name+'</td><td>'+c.dist+'</td><td>'+c.lugar+'</td><td>'+c.note+'</td></tr>'
+  ).join('');
+  document.getElementById('comp-prev-table').querySelector('thead').innerHTML = thead;
+  document.getElementById('comp-prev-table').querySelector('tbody').innerHTML = tbody;
+}
+
+async function bulkUploadComps() {
+  if (!db || !_fb) { showStatus('st-comp-bulk','err','Sin conexión Firebase.'); return; }
+  if (!bulkComps.length) return;
+  document.getElementById('btn-comp-upload').disabled = true;
+  document.getElementById('prog-wrap-comp').classList.add('show');
+  showStatus('st-comp-bulk','loading','Subiendo...');
+  let ok=0, fail=0;
+  for (let i=0; i<bulkComps.length; i++) {
+    const c = {...bulkComps[i]};
+    Object.keys(c).forEach(k => { if(!c[k]) delete c[k]; });
+    c.date = bulkComps[i].date;
+    try { await _fb.addDoc(_fb.collection(db,'competiciones'), c); ok++; }
+    catch(e) { fail++; }
+    const pct = Math.round(((i+1)/bulkComps.length)*100);
+    document.getElementById('prog-fill-comp').style.width = pct+'%';
+    document.getElementById('prog-label-comp').textContent = (i+1)+' / '+bulkComps.length+' subidas';
+  }
+  document.getElementById('btn-comp-upload').disabled = false;
+  if (fail===0) { showStatus('st-comp-bulk','ok','✓ '+ok+' competiciones subidas'); loadCompList(); }
+  else showStatus('st-comp-bulk','err', ok+' subidas, '+fail+' fallaron.');
+}
+
+function clearCompBulk() {
+  bulkComps=[];
+  document.getElementById('comp-preview-section').style.display='none';
+  document.getElementById('prog-wrap-comp').classList.remove('show');
+  hideStatus('st-comp-bulk'); hideStatus('st-comp-parse');
+  document.getElementById('prog-fill-comp').style.width='0%';
+}
+
+async function loadCompList() {
+  if (!db || !_fb) { document.getElementById('comp-list').innerHTML='<div class="empty">Sin conexión</div>'; return; }
+  document.getElementById('comp-list').innerHTML='<div class="empty">Cargando...</div>';
+  try {
+    const snap = await _fb.getDocs(_fb.query(_fb.collection(db,'competiciones'), _fb.orderBy('date','asc')));
+    allComps = [];
+    snap.forEach(d => allComps.push({id:d.id,...d.data()}));
+    renderCompList();
+  } catch(e) {
+    document.getElementById('comp-list').innerHTML='<div class="empty">Error: '+e.message+'</div>';
+  }
+}
+
+function setCompCatF(f, el) {
+  compCatFilter = f;
+  document.querySelectorAll('#comp-cat-filters .pill').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  renderCompList();
+}
+
+function renderCompList() {
+  const filtered = compCatFilter==='all' ? allComps : allComps.filter(c => c.cat===compCatFilter);
+  if (!filtered.length) { document.getElementById('comp-list').innerHTML='<div class="empty">No hay competiciones</div>'; return; }
+  const spMap = {running:'badge-gr',crossfit:'badge-rd',hyrox:'badge-pu',deka:'badge-or'};
+  const now = new Date(); now.setHours(0,0,0,0);
+  document.getElementById('comp-list').innerHTML = filtered.map(c => {
+    const isPast = new Date(c.date+'T00:00:00') < now;
+    return '<div class="wod-row" style="'+(isPast?'opacity:.45':'')+'">'+
+      '<span class="wr-date">'+c.date+'</span>'+
+      '<span class="badge '+(spMap[c.cat]||'badge-bl')+'" style="margin-right:6px;min-width:60px;justify-content:center">'+c.cat+'</span>'+
+      '<div style="flex:1;min-width:0">'+
+        '<div class="wr-title">'+c.name+'</div>'+
+        '<div class="wr-sede">'+(c.lugar||'')+(c.dist?' · '+c.dist:'')+(c.note?' — '+c.note:'')+'</div>'+
+      '</div>'+
+      '<button class="wr-del" onclick="confirmDelComp(''+c.id+'',''+c.name.replace(/'/g,"\'")+'')" >Eliminar</button>'+
+    '</div>';
+  }).join('');
+}
+
+let pendingDelCompId = null;
+function confirmDelComp(id, name) {
+  pendingDelCompId = id;
+  document.getElementById('modal-title').textContent = 'Eliminar competición';
+  document.getElementById('modal-msg').innerHTML = 'Eliminar <strong>'+name+'</strong>?<br>Esta acción no se puede deshacer.';
+  document.getElementById('modal-confirm').onclick = () => doDeleteComp();
+  document.getElementById('modal-ov').classList.add('open');
+}
+async function doDeleteComp() {
+  const idToDelete = pendingDelCompId;
+  closeModal();
+  if (!idToDelete || !db || !_fb) return;
+  try {
+    await _fb.deleteDoc(_fb.doc(db,'competiciones',idToDelete));
+    allComps = allComps.filter(c => c.id !== idToDelete);
+    renderCompList();
+    showStatus('st-comp-list','ok','✓ Competición eliminada');
+    setTimeout(()=>hideStatus('st-comp-list'),2500);
+  } catch(e) { showStatus('st-comp-list','err','Error: '+e.message); }
+  pendingDelCompId = null;
+}
+
+window.saveComp=saveComp; window.clearCompForm=clearCompForm;
+window.dzCompOver=dzCompOver; window.dzCompLeave=dzCompLeave; window.dzCompDrop=dzCompDrop; window.dzCompFile=dzCompFile;
+window.bulkUploadComps=bulkUploadComps; window.clearCompBulk=clearCompBulk;
+window.loadCompList=loadCompList; window.setCompCatF=setCompCatF;
+window.confirmDelComp=confirmDelComp; window.doDeleteComp=doDeleteComp;
+
 window.dL=dL; window.logout=logout; window.swTab=swTab; window.saveWod=saveWod; window.clearForm=clearForm;
 window.dzOver=dzOver; window.dzLeave=dzLeave; window.dzDrop=dzDrop; window.dzFile=dzFile;
 window.bulkUpload=bulkUpload; window.clearBulk=clearBulk;
 window.loadList=loadList; window.setMF=setMF; window.setSportFilter=setSportFilter;
-window.confirmDel=confirmDel; window.closeModal=closeModal; window.selSport=selSport;
+window.confirmDel=confirmDel; window.doDelete=doDelete; window.closeModal=closeModal; window.selSport=selSport;
 </script>
 </body>
 </html>

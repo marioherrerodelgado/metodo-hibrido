@@ -8,7 +8,7 @@ const auth=getAuth(app),db=getFirestore(app);
 const MN=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const MS=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 const DF=["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"];
-const td=new Date();let Y=td.getFullYear(),M=td.getMonth(),fl="all",ws=[],cn="hoy",cf="all";
+const td=new Date();let Y=td.getFullYear(),M=td.getMonth(),fl="all",ws=[],cn="hoy",cf="all",monthLoaded=false;
 
 const COMPS=[
 {date:"2026-03-22",name:"Media Maraton de Madrid",dist:"5/21 km",lugar:"Madrid",cat:"running"},
@@ -57,7 +57,7 @@ async function lM(){
   document.getElementById("msc").innerHTML='<div class="lw">Cargando<div class="lb"><div class="lf"></div></div></div>';
   document.getElementById("mpt").textContent=MS[M]+" "+Y;bS();bMM();
   try{const ms=Y+"-"+String(M+1).padStart(2,"0");const sn=await getDocs(query(collection(db,"wods"),where("month","==",ms)));ws=[];sn.forEach(d=>ws.push({id:d.id,...d.data()}));}catch(e){ws=[];}
-  rM();
+  monthLoaded=true;rM();
 }
 function gD(w){return w.fecha||w.date||"";}
 function gSC(w){const s=(w.sport||"running").toLowerCase();if(s==="hyrox")return"h";if(s==="deka")return"h";if(s==="crossfit")return"x";if((w.type||"").toLowerCase().includes("compet"))return"c";return"r";}
@@ -81,7 +81,7 @@ function gT(){const e=document.getElementById("ts");if(e)e.scrollIntoView({behav
 window.jD=function(d){document.querySelectorAll(".wd").forEach(e=>e.classList.remove("sel"));const x=document.getElementById("w"+d);if(x){x.classList.add("sel");x.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});}document.querySelectorAll(".dl").forEach(s=>{if(s.textContent.match(new RegExp(",\\s*"+d+"\\s")))s.scrollIntoView({behavior:"smooth",block:"start"});});};
 window.sF=function(s,b){fl=s;document.querySelectorAll(".fp").forEach(p=>p.classList.remove("on"));b.classList.add("on");rM();};
 function setFilterAll(){if(fl==="all")return false;fl="all";document.querySelectorAll(".fp").forEach(p=>p.classList.remove("on"));const ab=document.querySelector('.fp[data-s="all"]');if(ab)ab.classList.add("on");return true;}
-function goToday(){const now=new Date(),cy=now.getFullYear(),cm=now.getMonth(),monthChanged=Y!==cy||M!==cm,filterChanged=setFilterAll();Y=cy;M=cm;if(monthChanged){lM();return;}if(filterChanged){rM();setTimeout(gT,80);return;}gT();}
+function goToday(){const now=new Date(),cy=now.getFullYear(),cm=now.getMonth(),monthChanged=Y!==cy||M!==cm,filterChanged=setFilterAll();Y=cy;M=cm;if(monthChanged||!monthLoaded){lM();return;}if(filterChanged){rM();setTimeout(gT,80);return;}gT();}
 function bMM(){document.getElementById("my").textContent=Y;document.getElementById("mg").innerHTML=MS.map((m,i)=>'<div class="mm'+(i===M?" on":"")+'" onclick="sM('+i+')">'+m+"</div>").join("");}
 window.oMM=()=>document.getElementById("mo").classList.add("open");
 window.cMM=()=>document.getElementById("mo").classList.remove("open");

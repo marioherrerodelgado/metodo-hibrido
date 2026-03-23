@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><dimension ref="A1:M7"/><sheetViews><sheetView workbookViewId="0"/></sheetViews><cols><col min="1" max="1" width="12.83203125" customWidth="1"/><col min="2" max="2" width="40.83203125" customWidth="1"/><col min="3" max="3" width="12.83203125" customWidth="1"/><col min="4" max="4" width="15.83203125" customWidth="1"/><col min="5" max="5" width="20.83203125" customWidth="1"/><col min="6" max="6" width="10.83203125" customWidth="1"/><col min="7" max="7" width="10.83203125" customWidth="1"/><col min="8" max="8" width="10.83203125" customWidth="1"/><col min="9" max="9" width="60.83203125" customWidth="1"/><col min="10" max="10" width="40.83203125" customWidth="1"/><col min="11" max="11" width="80.83203125" customWidth="1"/><col min="12" max="12" width="80.83203125" customWidth="1"/><col min="13" max="13" width="40.83203125" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="str"><v>fecha</v></c><c r="B1" t="str"><v>titulo</v></c><c r="C1" t="str"><v>sport</v></c><c r="D1" t="str"><v>sede</v></c><c r="E1" t="str"><v>type</v></c><c r="F1" t="str"><v>intensity</v></c><c r="G1" t="str"><v>duration</v></c><c r="H1" t="str"><v>volume</v></c><c r="I1" t="str"><v>notes</v></c><c r="J1" t="str"><v>warmup</v></c><c r="K1" t="str"><v>main</v></c><c r="L1" t="str"><v>metcon</v></c><c r="M1" t="str"><v>cooldown</v></c></row><row r="2" xml:space="preserve"><c r="A2" t="str"><v>2026-03-23</v></c><c r="B2" t="str"><v>Lunes - Happy Athlete Semana 23 Mar</v></c><c r="C2" t="str"><v>crossfit</v></c><c r="D2" t="str"><v></v></c><c r="E2" t="str"><v>Strength + Metcon</v></c><c r="F2" t="str"><v>alta</v></c><c r="G2" t="str"><v>75</v></c><c r="H2" t="str"><v></v></c><c r="I2" t="str"><v>Cuarta y última semana con este MOVE de Carla. Empezad con 7 min de MOVE de forma ininterrumpida. BREATH: buscar el máximo ritmo sostenible durante los 14&apos; de trabajo. Empieza pensando en el ritmo que llevarías en la 3ª ronda.</v></c><c r="J2" t="str"><v>7 min MOVE de Carla (movimiento ininterrumpido)</v></c><c r="K2" t="str" xml:space="preserve"><v xml:space="preserve">B) OLY
+B.1) 1 Clean Pull + 1 Hang Squat Clean
+  3 reps – 60%
+  3×3 – 70%
+B.2) Squat Clean
+  3 reps – 75%
+  3×2 – 80%
+
+C) TONE
+C.1) TONE I – 4 Sets of:
+  5 Back Squat (2″ parada en sentadilla)
+  Into: 30″ Hamstring Plank
+  Rest 2′ entre sets
+C.2) 4 Sets of:
+  5 Sumo Deadlift (2″ bajada lenta)
+  Into: 30″ Dual KB Front Rack Wall Sit
+  Rest 2′ entre sets</v></c><c r="L2" t="str" xml:space="preserve"><v xml:space="preserve">AMRAP 14′
+12 Toes to Bar
+6 Right Arm DB Thrusters
+12 Pull-ups
+6 Left Arm DB Thrusters
+21/16 Calories Ski Erg</v></c><c r="M2" t="str"><v></v></c></row><row r="3" xml:space="preserve"><c r="A3" t="str"><v>2026-03-24</v></c><c r="B3" t="str"><v>Martes - Happy Athlete Semana 23 Mar</v></c><c r="C3" t="str"><v>crossfit</v></c><c r="D3" t="str"><v></v></c><c r="E3" t="str"><v>Strength + Metcon</v></c><c r="F3" t="str"><v>media</v></c><c r="G3" t="str"><v>70</v></c><c r="H3" t="str"><v></v></c><c r="I3" t="str"><v>Cuarta y última semana con este MOVE de Carla. BREATH: Simple y efectivo. Asegura siempre el minuto de calorías. En las Wall Balls, trata de mover un número parecido al de la primera ronda.</v></c><c r="J3" t="str"><v>7 min MOVE de Carla (movimiento ininterrumpido)</v></c><c r="K3" t="str" xml:space="preserve"><v xml:space="preserve">B) BASIC STRENGTH – 4 Sets of:
+  4 Heavy Bench Press
+  Rest 2′ entre sets
+
+C) TONE
+C.1) TONE – 4 Sets of:
+  12 Dual DB Incline Bench Press
+  Rest 30″
+  12 Dual KB Gorilla Row
+  Rest 90″
+C.2) TONE II – 4 rounds of:
+  6 Barbell Z Press
+  Rest 30″
+  6+6 Heavy DB Three Point Row
+  Rest 90″</v></c><c r="L3" t="str" xml:space="preserve"><v xml:space="preserve">EMOM 15′
+Minuto 1 – 15/12 Calories Assault Bike
+Minuto 2 – Max. Wall Balls
+Minuto 3 – Rest</v></c><c r="M3" t="str"><v></v></c></row><row r="4" xml:space="preserve"><c r="A4" t="str"><v>2026-03-25</v></c><c r="B4" t="str"><v>Miércoles - Happy Athlete Semana 23 Mar</v></c><c r="C4" t="str"><v>crossfit</v></c><c r="D4" t="str"><v></v></c><c r="E4" t="str"><v>Tone + Metcon</v></c><c r="F4" t="str"><v>alta</v></c><c r="G4" t="str"><v>70</v></c><c r="H4" t="str"><v></v></c><c r="I4" t="str"><v>Cuarta y última semana con este MOVE de Carla. BREATH: sesión intensa de las que dejan resaca. Estamos ante un trabajo cercano a los 20&apos; así que empieza gestionando bien el ritmo.</v></c><c r="J4" t="str"><v>7 min MOVE de Carla (movimiento ininterrumpido)</v></c><c r="K4" t="str" xml:space="preserve"><v xml:space="preserve">B) TONE
+B.1) 4 Sets of:
+  10 Explosive Hip Thrust
+  Rest 45″
+  5+5 Dual DB Bulgarian Squat
+  Rest 90″ entre sets
+B.2) EMOM 10′:
+  Odd – 30″ Glute Bridge Hold
+  Even – 10+10 Bulgarian Jumping Squat
+B.2) EMOM 10′:
+  Odd – 20+20″ Split Squat Hold
+  Even – 10+10 Single Leg Glute Bridge Extension</v></c><c r="L4" t="str" xml:space="preserve"><v xml:space="preserve">For time:
+500m Run
+4 Rounds of:
+  20 Alt. DB Snatch
+  20 Box Jump Over
+  20 Push Ups
+500m Run</v></c><c r="M4" t="str"><v></v></c></row><row r="5" xml:space="preserve"><c r="A5" t="str"><v>2026-03-26</v></c><c r="B5" t="str"><v>Jueves - Active Recovery Semana 23 Mar</v></c><c r="C5" t="str"><v>crossfit</v></c><c r="D5" t="str"><v></v></c><c r="E5" t="str"><v>Active Recovery</v></c><c r="F5" t="str"><v>baja</v></c><c r="G5" t="str"><v>30</v></c><c r="H5" t="str"><v></v></c><c r="I5" t="str"><v>Sesión de recuperación activa. 40″ ON / 20″ OFF de forma continua durante 30 minutos.</v></c><c r="J5" t="str"><v></v></c><c r="K5" t="str" xml:space="preserve"><v xml:space="preserve">A) Active Recovery
+EMOM 30′ (40″ ON / 20″ OFF)
+Minuto 1 – Calories Row
+Minuto 2 – Quad Plank
+Minuto 3 – Calories Bike Erg
+Minuto 4 – Tuck Hold
+Minuto 5 – Calories Ski Erg
+Minuto 6 – Forearm Plank</v></c><c r="L5" t="str"><v></v></c><c r="M5" t="str"><v></v></c></row><row r="6" xml:space="preserve"><c r="A6" t="str"><v>2026-03-27</v></c><c r="B6" t="str"><v>Viernes - Happy Athlete Semana 23 Mar</v></c><c r="C6" t="str"><v>crossfit</v></c><c r="D6" t="str"><v></v></c><c r="E6" t="str"><v>Strength + Metcon</v></c><c r="F6" t="str"><v>maxima</v></c><c r="G6" t="str"><v>75</v></c><c r="H6" t="str"><v></v></c><c r="I6" t="str"><v>Cuarta y última semana con este MOVE de Carla. BREATH: Trabajo de máxima intensidad. Elige un peso de D Ball que puedas mover touch and go y UB. Habrá que sufrir pero gestiona bien el peso.</v></c><c r="J6" t="str"><v>7 min MOVE de Carla (movimiento ininterrumpido)</v></c><c r="K6" t="str" xml:space="preserve"><v xml:space="preserve">B) OLY
+B.1) 1 Snatch Deadlift Pull + 1 Hang Power Snatch
+  3 reps – 60%
+  3×3 – 70%
+B.2) Power Snatch
+  3 reps – 75%
+  3×2 – 80%
+
+C) TONE
+C.1) 4 Sets of:
+  4 Weighted Pull-ups
+  Into: 12 Max. Difficult Ring Push Ups
+  Rest 2′ entre sets
+C.2) 4 Sets of:
+  3+3 SA Biased Strict Pull-ups
+  Into: 6 Max. Difficult Ring Dips</v></c><c r="L6" t="str" xml:space="preserve"><v xml:space="preserve">3 Rounds of:
+15/12 Calories Row
+12 Easy D Ball Clean touch and go
+9 Burpee Box Jump Over
+Rest 2′30″ entre sets</v></c><c r="M6" t="str"><v></v></c></row><row r="7" xml:space="preserve"><c r="A7" t="str"><v>2026-03-28</v></c><c r="B7" t="str"><v>Sábado - Happy Athlete Semana 23 Mar</v></c><c r="C7" t="str"><v>crossfit</v></c><c r="D7" t="str"><v></v></c><c r="E7" t="str"><v>Strength + Metcon</v></c><c r="F7" t="str"><v>alta</v></c><c r="G7" t="str"><v>75</v></c><c r="H7" t="str"><v></v></c><c r="I7" t="str"><v>Cuarta y última semana con este MOVE de Carla. BREATH: Pieza muy exigente de hombro y tríceps. Gestiona bien las primeras rondas para aguantar el volumen total.</v></c><c r="J7" t="str"><v>7 min MOVE de Carla (movimiento ininterrumpido)</v></c><c r="K7" t="str" xml:space="preserve"><v xml:space="preserve">B) BASIC STRENGTH – 4 Sets of:
+  4 Heavy Front Squat
+  Rest 2′ entre sets
+
+C) TONE
+C.1) TONE I – 3 rounds of:
+  8 Alternative Back Reverse Lunge
+  Rest 30″
+  5 High Box Jump
+  Rest 90″
+C.2) 3 Sets of:
+  4+4 Dual KB Front Rack Split Squat
+  Rest 30″
+  5 Seated Box Jump
+  Rest 90″</v></c><c r="L7" t="str" xml:space="preserve"><v xml:space="preserve">For time – 5 Rounds of:
+Round 1: 25 Dual DB Push Press / 50 Double Unders / 25 Calories Ski Erg
+Round 2: 20 Dual DB Push Press / 50 Double Unders / 20 Calories Ski Erg
+Round 3: 15 Dual DB Push Press / 50 Double Unders / 15 Calories Ski Erg
+Round 4: 10 Dual DB Push Press / 50 Double Unders / 10 Calories Ski Erg
+Round 5: 5 Dual DB Push Press / 50 Double Unders / 5 Calories Ski Erg</v></c><c r="M7" t="str"><v></v></c></row></sheetData><ignoredErrors><ignoredError numberStoredAsText="1" sqref="A1:M7"/></ignoredErrors></worksheet>

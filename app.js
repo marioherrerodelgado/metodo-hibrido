@@ -47,6 +47,24 @@ window.doLogin=async function(){
   }btn.disabled=false;ld.classList.remove("show");
 };
 window.doLogout=async()=>{await signOut(auth);document.getElementById("umenu").classList.remove("open");};
+window.openWodbusterBooking=function(){
+  const fallback="https://www.wodbuster.com";
+  const ua=navigator.userAgent||"";
+  const isAndroid=/android/i.test(ua);
+  const isiOS=/iPad|iPhone|iPod/i.test(ua);
+  if(isAndroid){
+    const intent="intent://#Intent;scheme=wodbuster;S.browser_fallback_url="+encodeURIComponent(fallback)+";end";
+    window.location.href=intent;
+    return;
+  }
+  if(isiOS){
+    const t0=Date.now();
+    window.location.href="wodbuster://";
+    setTimeout(()=>{if(Date.now()-t0<1800)window.location.href=fallback;},1200);
+    return;
+  }
+  window.open(fallback,"_blank","noopener");
+};
 function setUI(u){const e=u.email||"",i=e.charAt(0).toUpperCase();document.getElementById("uav").textContent=i;document.getElementById("ueml").textContent=e;document.getElementById("box-email").textContent=e;}
 window.toggleUM=()=>document.getElementById("umenu").classList.toggle("open");
 document.addEventListener("click",e=>{if(!e.target.closest("#uav")&&!e.target.closest("#umenu"))document.getElementById("umenu").classList.remove("open");});

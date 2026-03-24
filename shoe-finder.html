@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#f6f6f4">
+<title>Test de zapatillas - Método Híbrido</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="shortcut icon" href="favicon.svg">
+<link rel="apple-touch-icon" href="favicon.svg">
+<style>
+:root{
+  --bg:#f6f6f4;
+  --surface:#ffffff;
+  --surface-soft:#fbfbf9;
+  --border:#e6e6e1;
+  --text:#101010;
+  --muted:#686868;
+  --muted-2:#8f8f8f;
+  --brand:#111111;
+  --brand-2:#2b2b2b;
+  --accent:#ff6a00;
+  --accent-soft:#ffe4cf;
+  --radius-xl:24px;
+  --radius-lg:18px;
+  --radius-md:14px;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(80vw 45vh at 100% -10%, #ededea 0%, transparent 60%),
+    radial-gradient(70vw 35vh at -5% 0%, #f1f1ed 0%, transparent 65%),
+    var(--bg);
+}
+.app{
+  max-width:620px;
+  margin:0 auto;
+  min-height:100dvh;
+  padding:18px 14px calc(20px + var(--safe-bottom));
+}
+.top{
+  position:sticky;
+  top:0;
+  z-index:20;
+  margin:-18px -14px 14px;
+  padding:16px 14px 12px;
+  background:linear-gradient(to bottom,rgba(246,246,244,.98) 82%,rgba(246,246,244,0));
+  backdrop-filter:blur(6px);
+}
+.top-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+.back{
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  color:var(--brand-2);
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:999px;
+  padding:8px 12px;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--muted);
+  border-radius:999px;
+  padding:7px 11px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.3px;
+}
+.title{
+  margin-top:12px;
+  font-size:34px;
+  line-height:.96;
+  font-weight:800;
+  letter-spacing:-1.2px;
+}
+.title span{display:block;color:var(--muted)}
+.sub{
+  margin-top:8px;
+  font-size:13px;
+  color:var(--muted);
+  max-width:40ch;
+}
+.progress{
+  margin-top:13px;
+  height:6px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:var(--surface-soft);
+  overflow:hidden;
+}
+.progress > div{
+  height:100%;
+  width:20%;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--brand),#4a4a4a 50%,var(--accent));
+  transition:width .28s ease;
+}
+.scr{display:none;animation:in .28s ease both}
+.scr.on{display:block}
+@keyframes in{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.card{
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:var(--radius-xl);
+  padding:16px;
+  box-shadow:0 9px 30px rgba(16,16,16,.04);
+}
+.tag{
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.8px;
+  color:var(--muted-2);
+  text-transform:uppercase;
+}
+.q{
+  margin-top:6px;
+  font-size:27px;
+  line-height:1.03;
+  letter-spacing:-.8px;
+  font-weight:800;
+}
+.qs{
+  margin-top:7px;
+  font-size:13px;
+  color:var(--muted);
+}
+.opts{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:9px;
+  margin-top:14px;
+}
+.opts.compact{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+.opt{
+  position:relative;
+  text-align:left;
+  border:1px solid var(--border);
+  background:var(--surface-soft);
+  border-radius:var(--radius-md);
+  padding:12px 13px;
+  cursor:pointer;
+  transition:transform .12s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease;
+}
+.opt:hover{border-color:#d2d2cb}
+.opt:active{transform:scale(.985)}
+.opt.on{
+  border-color:#c9c9bf;
+  background:#fff;
+  box-shadow:0 8px 24px rgba(20,20,20,.06);
+}
+.opt.on::after{
+  content:"✓";
+  position:absolute;
+  right:10px;
+  top:10px;
+  width:20px;
+  height:20px;
+  border-radius:999px;
+  background:var(--brand);
+  color:#fff;
+  font-size:12px;
+  line-height:20px;
+  text-align:center;
+}
+.ol{
+  font-size:14px;
+  font-weight:700;
+  color:var(--text);
+  padding-right:24px;
+}
+.od{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:3px;
+}
+.budget{
+  margin-top:16px;
+  font-size:56px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:-1.8px;
+  text-align:center;
+}
+.budget-note{
+  margin-top:8px;
+  text-align:center;
+  font-size:12px;
+  color:var(--muted-2);
+  font-weight:600;
+}
+input[type=range]{
+  width:100%;
+  margin-top:16px;
+  appearance:none;
+  -webkit-appearance:none;
+  height:5px;
+  border-radius:999px;
+  background:#e0e0db;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  appearance:none;
+  width:28px;
+  height:28px;
+  border-radius:999px;
+  background:var(--brand);
+  border:3px solid #fff;
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+}
+.ctrl{
+  display:flex;
+  gap:9px;
+  margin-top:14px;
+}
+.btn{
+  flex:1;
+  border-radius:999px;
+  padding:13px 12px;
+  font-size:14px;
+  font-weight:800;
+  border:none;
+  cursor:pointer;
+  letter-spacing:.2px;
+}
+.btn.p{
+  color:#fff;
+  background:linear-gradient(90deg,#111,#2c2c2c);
+}
+.btn.s{
+  background:#fff;
+  color:var(--brand-2);
+  border:1px solid var(--border);
+}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.rr{
+  display:grid;
+  gap:11px;
+  margin-top:12px;
+}
+.rc{
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  background:var(--surface);
+  padding:14px;
+  box-shadow:0 8px 24px rgba(16,16,16,.04);
+}
+.rb{
+  display:inline-block;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.7px;
+  text-transform:uppercase;
+  border-radius:999px;
+  padding:5px 8px;
+  background:var(--accent-soft);
+  color:#8c3b00;
+}
+.rn{
+  margin-top:9px;
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:-.6px;
+}
+.rd{
+  margin-top:6px;
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.5;
+}
+.meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:11px;
+}
+.pill{
+  font-size:11px;
+  font-weight:700;
+  color:var(--muted);
+  border:1px solid var(--border);
+  background:var(--surface-soft);
+  border-radius:999px;
+  padding:5px 9px;
+}
+@media (max-width:480px){
+  .title{font-size:30px}
+  .q{font-size:24px}
+  .opts.compact{grid-template-columns:1fr}
+  .budget{font-size:48px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="top-row">
+      <a class="back" href="index.html">Volver</a>
+      <div class="badge">Método Híbrido</div>
+    </div>
+    <div class="title">Shoe Finder<span>elige con criterio</span></div>
+    <div class="sub">Responde 5 pasos y te recomendamos zapatillas según tu disciplina, pisada y presupuesto.</div>
+    <div class="progress"><div id="pb"></div></div>
+  </div>
+
+  <div class="scr on" id="s1">
+    <div class="card">
+      <div class="tag">Paso 1/5</div>
+      <div class="q">¿Qué disciplina preparas?</div>
+      <div class="qs">Elige la principal para afinar la recomendación.</div>
+      <div class="opts" id="o1"></div>
+      <div class="ctrl"><button class="btn p" onclick="next()" id="n1" disabled>Siguiente</button></div>
+    </div>
+  </div>
+
+  <div class="scr" id="s2">
+    <div class="card">
+      <div class="tag">Paso 2/5</div>
+      <div class="q">¿Qué priorizas?</div>
+      <div class="qs">Lo que más valoras en tu zapatilla.</div>
+      <div class="opts" id="o2"></div>
+      <div class="ctrl">
+        <button class="btn s" onclick="prev()">Atrás</button>
+        <button class="btn p" onclick="next()" id="n2" disabled>Siguiente</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scr" id="s3">
+    <div class="card">
+      <div class="tag">Paso 3/5</div>
+      <div class="q">¿Cómo es tu pisada?</div>
+      <div class="qs">Si no lo sabes, marca "No lo sé".</div>
+      <div class="opts" id="o3"></div>
+      <div class="ctrl">
+        <button class="btn s" onclick="prev()">Atrás</button>
+        <button class="btn p" onclick="next()" id="n3" disabled>Siguiente</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scr" id="s4">
+    <div class="card">
+      <div class="tag">Paso 4/5</div>
+      <div class="q">¿Cuántos entrenos por semana?</div>
+      <div class="qs">Nos ayuda a estimar estabilidad y durabilidad.</div>
+      <div class="opts compact" id="o4"></div>
+      <div class="ctrl">
+        <button class="btn s" onclick="prev()">Atrás</button>
+        <button class="btn p" onclick="next()" id="n4" disabled>Siguiente</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scr" id="s5">
+    <div class="card">
+      <div class="tag">Paso 5/5</div>
+      <div class="q">¿Presupuesto máximo?</div>
+      <div class="budget" id="bv">140€</div>
+      <div class="budget-note">Ajusta el rango para ver opciones realistas</div>
+      <input type="range" min="70" max="280" step="10" value="140" id="budget">
+      <div class="ctrl">
+        <button class="btn s" onclick="prev()">Atrás</button>
+        <button class="btn p" onclick="result()">Ver resultado</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scr" id="sr">
+    <div class="card">
+      <div class="tag">Resultado</div>
+      <div class="q" id="rt">Tus mejores opciones</div>
+      <div class="qs" id="rs"></div>
+    </div>
+    <div class="rr" id="rr"></div>
+    <div class="ctrl"><button class="btn s" onclick="restart()">Repetir test</button></div>
+  </div>
+</div>
+
+<script>
+const state={step:1,disc:null,prio:null,foot:null,freq:null,budget:140};
+const set1=[
+  ["running","Running","Correr y rendimiento"],
+  ["hyrox","Hyrox","Híbrido carrera + estaciones"],
+  ["deka","DEKA","Funcional por zonas"],
+  ["crossfit","CrossFit","Multimodal"],
+  ["halterofilia","Halterofilia","Levantamiento"],
+  ["all","Mixto","Quiero una opción versátil"]
+];
+const set2=[
+  ["estabilidad","Estabilidad","Cambios laterales y cargas"],
+  ["amortiguacion","Amortiguación","Impacto y confort"],
+  ["versatilidad","Versatilidad","Todo en una"],
+  ["velocidad","Velocidad","Respuesta y ligereza"],
+  ["agarre","Agarre","Tracción en estación y cinta"]
+];
+const set3=[
+  ["neutral","Neutra","Apoyo equilibrado"],
+  ["pronadora","Pronadora","Tiende a entrar"],
+  ["supinadora","Supinadora","Tiende a salir"],
+  ["unknown","No lo sé","Sin evaluación"]
+];
+const set4=[
+  ["2","1-2","Carga baja"],
+  ["4","3-4","Carga media"],
+  ["6","5-6+","Carga alta"]
+];
+const db={
+  running:[
+    {name:"ASICS Gel-Kayano 31",fit:"pronadora",prio:["estabilidad","amortiguacion"],price:[170,210],why:"Soporte alto para rodajes largos y control de pronación."},
+    {name:"Nike Pegasus 41",fit:"neutral",prio:["versatilidad","amortiguacion"],price:[120,150],why:"Muy equilibrada para entrenar casi todo el año."},
+    {name:"Adidas Adizero Boston 12",fit:"neutral",prio:["velocidad"],price:[130,170],why:"Más reactiva para ritmos vivos y calidad."}
+  ],
+  hyrox:[
+    {name:"PUMA Deviate NITRO 3",fit:"neutral",prio:["versatilidad","velocidad"],price:[140,180],why:"Buena transición carrera-estación, estable y reactiva."},
+    {name:"HOKA Mach 6",fit:"neutral",prio:["amortiguacion","velocidad"],price:[140,170],why:"Ligera y dinámica para bloques largos de carrera."},
+    {name:"RAD ONE",fit:"neutral",prio:["estabilidad","versatilidad"],price:[150,190],why:"Híbrida enfocada a trabajo funcional + run."}
+  ],
+  deka:[
+    {name:"Nike Metcon 9",fit:"neutral",prio:["estabilidad","agarre"],price:[120,160],why:"Muy estable para estaciones y buen control lateral."},
+    {name:"Reebok Nano X4",fit:"neutral",prio:["versatilidad","agarre"],price:[120,160],why:"Cross-trainer sólida para sesiones funcionales completas."},
+    {name:"PUMA Fuse 3.0",fit:"neutral",prio:["estabilidad"],price:[90,130],why:"Plataforma firme para empuje y control técnico."}
+  ],
+  crossfit:[
+    {name:"Nike Metcon 9",fit:"neutral",prio:["estabilidad","agarre"],price:[120,160],why:"Referencia para WODs con cargas y movimientos mixtos."},
+    {name:"Reebok Nano X4",fit:"neutral",prio:["versatilidad","estabilidad"],price:[120,160],why:"Muy equilibrada para box diario."},
+    {name:"TYR CXT-2 Trainer",fit:"neutral",prio:["estabilidad","versatilidad"],price:[140,180],why:"Firme para fuerza con respuesta en conditioning."}
+  ],
+  halterofilia:[
+    {name:"Adipower III",fit:"neutral",prio:["estabilidad"],price:[150,220],why:"Talón elevado y base rígida para sentadilla y arrancada."},
+    {name:"Nike Romaleos 4",fit:"neutral",prio:["estabilidad"],price:[170,240],why:"Máxima firmeza y sujeción para levantamientos pesados."},
+    {name:"Do-Win Weightlifting",fit:"neutral",prio:["estabilidad"],price:[120,170],why:"Muy buena relación estabilidad/precio para técnica."}
+  ],
+  all:[
+    {name:"Reebok Nano X4",fit:"neutral",prio:["versatilidad"],price:[120,160],why:"La opción más equilibrada para perfil mixto."},
+    {name:"Nike Metcon 9",fit:"neutral",prio:["estabilidad"],price:[120,160],why:"Si priorizas fuerza y control lateral."},
+    {name:"PUMA Deviate NITRO 3",fit:"neutral",prio:["velocidad","amortiguacion"],price:[140,180],why:"Si priorizas correr con buena respuesta."}
+  ]
+};
+
+const $=id=>document.getElementById(id);
+
+function buildOpts(id,data,key){
+  $(id).innerHTML=data.map(([v,l,d])=>`<button class="opt" data-v="${v}"><div class="ol">${l}</div><div class="od">${d}</div></button>`).join("");
+  $(id).querySelectorAll(".opt").forEach(b=>{
+    b.addEventListener("click",()=>{
+      $(id).querySelectorAll(".opt").forEach(x=>x.classList.remove("on"));
+      b.classList.add("on");
+      state[key]=b.dataset.v;
+      const nextBtn=$("n"+state.step);
+      if(nextBtn) nextBtn.disabled=false;
+    });
+  });
+}
+
+buildOpts("o1",set1,"disc");
+buildOpts("o2",set2,"prio");
+buildOpts("o3",set3,"foot");
+buildOpts("o4",set4,"freq");
+
+$("budget").addEventListener("input",e=>{
+  state.budget=parseInt(e.target.value,10);
+  $("bv").textContent=state.budget+"€";
+});
+
+function show(step){
+  state.step=step;
+  document.querySelectorAll(".scr").forEach(s=>s.classList.remove("on"));
+  $("s"+step).classList.add("on");
+  $("pb").style.width=(step*20)+"%";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function next(){ if(state.step<5) show(state.step+1); }
+function prev(){ if(state.step>1) show(state.step-1); }
+
+function score(it){
+  let s=0;
+  if(it.prio.includes(state.prio)) s+=3;
+  if(state.foot==="pronadora" && it.fit==="pronadora") s+=3;
+  if(state.foot==="neutral" && it.fit==="neutral") s+=2;
+  if(state.budget>=it.price[0] && state.budget<=it.price[1]) s+=3;
+  const f=parseInt(state.freq,10)||3;
+  if(f>=5 && it.prio.includes("estabilidad")) s+=1;
+  return s;
+}
+
+function result(){
+  const pool=(db[state.disc]||db.all)
+    .map(x=>({...x,sc:score(x)}))
+    .sort((a,b)=>b.sc-a.sc)
+    .slice(0,3);
+  $("rt").textContent="Tus mejores opciones";
+  $("rs").textContent=`Perfil: ${state.disc.toUpperCase()} · Presupuesto: ${state.budget}€`;
+  $("rr").innerHTML=pool.map((x,i)=>`
+    <div class="rc">
+      <div class="rb">${i===0?"Top recomendada":"Alternativa"}</div>
+      <div class="rn">${x.name}</div>
+      <div class="rd">${x.why}</div>
+      <div class="meta">
+        <span class="pill">${x.price[0]}-${x.price[1]}€</span>
+        <span class="pill">${state.prio}</span>
+        <span class="pill">${state.foot}</span>
+      </div>
+      <div class="ctrl" style="margin-top:10px">
+        <button class="btn s" onclick="window.open('https://www.google.com/search?q='+encodeURIComponent('${x.name} comprar'),'_blank')">Buscar online</button>
+      </div>
+    </div>
+  `).join("");
+  localStorage.setItem("mh_shoe_finder_last",JSON.stringify({...state,at:new Date().toISOString()}));
+  document.querySelectorAll(".scr").forEach(s=>s.classList.remove("on"));
+  $("sr").classList.add("on");
+  $("pb").style.width="100%";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function restart(){
+  state.step=1;
+  state.disc=null;
+  state.prio=null;
+  state.foot=null;
+  state.freq=null;
+  show(1);
+  ["n1","n2","n3","n4"].forEach(id=>$(id).disabled=true);
+  document.querySelectorAll(".opt").forEach(o=>o.classList.remove("on"));
+}
+
+show(1);
+</script>
+</body>
+</html>

@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0d1117">
-<title>Método Híbrido Admin</title>
+<title>MÃ©todo HÃ­brido Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -175,14 +175,16 @@ table.prev tr:hover td{background:var(--sf2)}
   <div class="li">
     <div class="li-logo">
       <div class="li-ic"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 7h3V4.5h4V7h3v5h-3v2.5H7V12H4z" stroke="white" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M2 8h2M14 8h2M2 10h2M14 10h2" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-      <div><div class="li-brand">Método Híbrido</div><div class="li-sub2">Panel de administracion</div></div>
+      <div><div class="li-brand">MÃ©todo HÃ­brido</div><div class="li-sub2">Panel de administraciÃ³n</div></div>
     </div>
     <div class="li-title">Acceso Admin</div>
-    <div class="li-desc">Introduce la contrasena de administrador para continuar.</div>
-    <label style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px">Contrasena</label>
-    <input type="password" class="fi" id="ac" placeholder="Contrasena admin" onkeydown="if(event.key==='Enter')dL()">
+    <div class="li-desc">Inicia sesiÃ³n con una cuenta administradora.</div>
+    <label style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px">Email</label>
+    <input type="email" class="fi" id="ae" placeholder="admin@tuapp.com" autocomplete="email">
+    <label style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px">ContraseÃ±a</label>
+    <input type="password" class="fi" id="ac" placeholder="Tu contraseÃ±a" onkeydown="if(event.key==='Enter')dL()" autocomplete="current-password">
     <button class="btn-primary" onclick="dL()">Entrar al panel</button>
-    <div class="li-err" id="le">Contrasena incorrecta.</div>
+    <div class="li-err" id="le">Credenciales invÃ¡lidas o sin permisos de admin.</div>
   </div>
 </div>
 
@@ -191,7 +193,7 @@ table.prev tr:hover td{background:var(--sf2)}
   <div class="topbar">
     <div class="tb-left">
       <div class="tb-ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 6h2.5V4h4v2h2.5v4.5h-2.5V11H6V10.5H3.5z" stroke="#0d1117" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M1.5 7h2M12.5 7h2M1.5 9h2M12.5 9h2" stroke="#0d1117" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-      <span class="tb-name">Método Híbrido Admin</span>
+      <span class="tb-name">MÃ©todo HÃ­brido Admin</span>
       <span class="tb-badge">v2.0</span>
     </div>
     <div class="tb-logout" onclick="logout()">Cerrar sesion</div>
@@ -201,7 +203,7 @@ table.prev tr:hover td{background:var(--sf2)}
     <div class="tab on" id="tab-add" onclick="swTab('add')">Subir WOD</div>
     <div class="tab" id="tab-bulk" onclick="swTab('bulk')">Carga masiva</div>
     <div class="tab" id="tab-list" onclick="swTab('list')">Ver / Eliminar</div>
-      <div class="tab" id="tab-comp" onclick="swTab('comp')">🏁 Competiciones</div>
+      <div class="tab" id="tab-comp" onclick="swTab('comp')">ðŸ Competiciones</div>
   </div>
 
   <div class="main">
@@ -240,13 +242,13 @@ table.prev tr:hover td{background:var(--sf2)}
               <option>Juan Carlos I</option>
               <option>Parque Juan Carlos I</option>
               <option>Madrid</option>
-              <option>Box Método Híbrido</option>
+              <option>Box MÃ©todo HÃ­brido</option>
               <option>Libre</option>
             </select>
           </div>
           <div class="field fg-full">
             <label class="lbl">Titulo del entrenamiento <span>*</span></label>
-            <input type="text" class="fi2" id="f-titulo" placeholder="ej: Strength + BREATH — Lunes Box">
+            <input type="text" class="fi2" id="f-titulo" placeholder="ej: Strength + BREATH â€” Lunes Box">
           </div>
           <div class="field">
             <label class="lbl">Tipo</label>
@@ -291,7 +293,7 @@ table.prev tr:hover td{background:var(--sf2)}
           <div class="field">
             <label class="lbl">Volumen</label>
             <select class="fi2" id="f-volume">
-              <option value="">—</option>
+              <option value="">â€”</option>
               <option>Bajo</option>
               <option>Medio</option>
               <option>Alto</option>
@@ -348,9 +350,9 @@ table.prev tr:hover td{background:var(--sf2)}
         <div class="card-sub">Columnas: fecha, month, <strong>sport</strong>, sede, titulo, intensity, duration, volume, type, notes, warmup, main, metcon, cooldown</div>
         <div class="dropzone" id="dz" ondragover="dzOver(event)" ondragleave="dzLeave()" ondrop="dzDrop(event)">
           <input type="file" accept=".xlsx,.xls,.csv" onchange="dzFile(this)">
-          <div class="dz-ic">📊</div>
+          <div class="dz-ic">ðŸ“Š</div>
           <div class="dz-title">Arrastra el Excel aqui</div>
-          <div class="dz-sub">o haz clic para seleccionar · .xlsx / .csv</div>
+          <div class="dz-sub">o haz clic para seleccionar Â· .xlsx / .csv</div>
         </div>
         <div class="status" id="st-parse"></div>
       </div>
@@ -408,7 +410,7 @@ table.prev tr:hover td{background:var(--sf2)}
 
       <!-- INDIVIDUAL -->
       <div class="card">
-        <div class="card-title">Añadir competición</div>
+        <div class="card-title">AÃ±adir competiciÃ³n</div>
         <div class="card-sub">Rellena los campos y guarda en Firebase</div>
         <div class="form-grid">
           <div class="field">
@@ -416,7 +418,7 @@ table.prev tr:hover td{background:var(--sf2)}
             <input type="date" class="fi2" id="c-fecha">
           </div>
           <div class="field">
-            <label class="lbl">Categoría</label>
+            <label class="lbl">CategorÃ­a</label>
             <select class="fi2" id="c-cat">
               <option value="running">Running</option>
               <option value="hyrox">Hyrox</option>
@@ -426,7 +428,7 @@ table.prev tr:hover td{background:var(--sf2)}
           </div>
           <div class="field fg-full">
             <label class="lbl">Nombre <span>*</span></label>
-            <input type="text" class="fi2" id="c-name" placeholder="ej: Maratón de Madrid">
+            <input type="text" class="fi2" id="c-name" placeholder="ej: MaratÃ³n de Madrid">
           </div>
           <div class="field">
             <label class="lbl">Distancia / Formato</label>
@@ -438,13 +440,13 @@ table.prev tr:hover td{background:var(--sf2)}
           </div>
           <div class="field fg-full">
             <label class="lbl">Nota (opcional)</label>
-            <input type="text" class="fi2" id="c-note" placeholder="ej: 22-24 may · inscripción abierta">
+            <input type="text" class="fi2" id="c-note" placeholder="ej: 22-24 may Â· inscripciÃ³n abierta">
           </div>
         </div>
         <div class="btn-row">
           <button class="btn btn-g" onclick="saveComp()">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Guardar competición
+            Guardar competiciÃ³n
           </button>
           <button class="btn btn-b" onclick="clearCompForm()">Limpiar</button>
         </div>
@@ -454,12 +456,12 @@ table.prev tr:hover td{background:var(--sf2)}
       <!-- CARGA MASIVA -->
       <div class="card">
         <div class="card-title">Carga masiva desde Excel</div>
-        <div class="card-sub">Columnas obligatorias: <strong>date</strong> (YYYY-MM-DD), <strong>name</strong> · Opcionales: <strong>dist</strong>, <strong>lugar</strong>, <strong>cat</strong> (running/hyrox/deka/crossfit), <strong>note</strong></div>
+        <div class="card-sub">Columnas obligatorias: <strong>date</strong> (YYYY-MM-DD), <strong>name</strong> Â· Opcionales: <strong>dist</strong>, <strong>lugar</strong>, <strong>cat</strong> (running/hyrox/deka/crossfit), <strong>note</strong></div>
         <div class="dropzone" id="dz-comp" ondragover="dzCompOver(event)" ondragleave="dzCompLeave()" ondrop="dzCompDrop(event)">
           <input type="file" accept=".xlsx,.xls" onchange="dzCompFile(this)">
-          <div class="dz-ic">🏁</div>
+          <div class="dz-ic">ðŸ</div>
           <div class="dz-title">Arrastra el Excel de competiciones</div>
-          <div class="dz-sub">o haz clic · .xlsx</div>
+          <div class="dz-sub">o haz clic Â· .xlsx</div>
         </div>
         <div class="status" id="st-comp-parse"></div>
       </div>
@@ -472,7 +474,7 @@ table.prev tr:hover td{background:var(--sf2)}
         </div>
         <div class="card">
           <div class="card-title">Subir a Firebase</div>
-          <div class="card-sub">Se guardarán en la colección <code>competiciones</code></div>
+          <div class="card-sub">Se guardarÃ¡n en la colecciÃ³n <code>competiciones</code></div>
           <div class="btn-row">
             <button class="btn btn-g" id="btn-comp-upload" onclick="bulkUploadComps()">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 4l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 10v1a1 1 0 001 1h8a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -492,9 +494,9 @@ table.prev tr:hover td{background:var(--sf2)}
       <div class="card">
         <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
           <span>Competiciones en Firebase</span>
-          <button class="btn btn-b" onclick="loadCompList()">↻ Actualizar</button>
+          <button class="btn btn-b" onclick="loadCompList()">â†» Actualizar</button>
         </div>
-        <div class="card-sub">Filtrar por categoría</div>
+        <div class="card-sub">Filtrar por categorÃ­a</div>
         <div class="filter-row2" id="comp-cat-filters" style="margin-top:8px">
           <div class="pill on" data-cf="all" onclick="setCompCatF('all',this)">Todas</div>
           <div class="pill" data-cf="running" onclick="setCompCatF('running',this)">Running</div>
@@ -524,7 +526,6 @@ table.prev tr:hover td{background:var(--sf2)}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-const ADMIN_PWD = "metodohibrido";
 const firebaseConfig = {
   apiKey: "AIzaSyA9M9oB4pfovY0Lj-HdfrQxxkp5pzbEd4Q",
   authDomain: "elmetodohibrido.firebaseapp.com",
@@ -534,52 +535,100 @@ const firebaseConfig = {
   appId: "1:283253527108:web:8a64bbf9b72fb40756e211"
 };
 
-let db = null, _fb = null;
+let db = null, _fb = null, auth = null, fbApp = null;
 let bulkWods = [], allWods = [], listFilter = 'all', sportListFilter = 'all';
 let selectedSport = 'running';
 
-// ── LOGIN ──
-function dL() {
-  const v = document.getElementById('ac').value;
-  if (v === ADMIN_PWD) {
-    localStorage.setItem('mh_admin','1');
-    document.getElementById('ls').classList.add('h');
-    document.getElementById('app').classList.add('on');
-    initAdmin();
-  } else {
-    document.getElementById('le').classList.add('show');
-  }
+// LOGIN
+function showLogin(msg='') {
+  document.getElementById('ls').classList.remove('h');
+  document.getElementById('app').classList.remove('on');
+  const err = document.getElementById('le');
+  err.textContent = msg || 'Credenciales inválidas o sin permisos de admin.';
+  err.classList.toggle('show', !!msg);
 }
-function logout() {
-  localStorage.removeItem('mh_admin');
-  location.reload();
-}
-if (localStorage.getItem('mh_admin') === '1') {
+function showAdminUI() {
+  document.getElementById('le').classList.remove('show');
   document.getElementById('ls').classList.add('h');
   document.getElementById('app').classList.add('on');
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAdmin);
-  } else {
-    initAdmin();
+}
+async function ensureFirebase() {
+  if (db && _fb && auth) return;
+  const { initializeApp, getApps, getApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+  const { getFirestore, collection, query, orderBy, getDocs, addDoc, setDoc, deleteDoc, doc, where, getDoc } =
+    await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } =
+    await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
+  fbApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+  db = getFirestore(fbApp);
+  auth = getAuth(fbApp);
+  _fb = { collection, query, orderBy, getDocs, addDoc, setDoc, deleteDoc, doc, where, getDoc, signInWithEmailAndPassword, onAuthStateChanged, signOut };
+}
+async function isAdminUser(uid) {
+  try {
+    const snap = await _fb.getDoc(_fb.doc(db, 'admins', uid));
+    if (!snap.exists()) return false;
+    const data = snap.data() || {};
+    return data.active !== false;
+  } catch (e) {
+    return false;
   }
 }
+let _inited = false;
+async function dL() {
+  const email = (document.getElementById('ae').value || '').trim();
+  const pass = document.getElementById('ac').value || '';
+  if (!email || !pass) { showLogin('Introduce email y contraseña.'); return; }
+  try {
+    await ensureFirebase();
+    const cred = await _fb.signInWithEmailAndPassword(auth, email, pass);
+    const ok = await isAdminUser(cred.user.uid);
+    if (!ok) {
+      await _fb.signOut(auth);
+      showLogin('Tu cuenta no tiene permisos de administrador.');
+      return;
+    }
+    showAdminUI();
+    if (!_inited) { _inited = true; initAdmin(); }
+  } catch (e) {
+    showLogin('Credenciales inválidas o sin permisos de admin.');
+  }
+}
+async function logout() {
+  try { if (auth && _fb && _fb.signOut) await _fb.signOut(auth); } catch(e) {}
+  location.reload();
+}
+async function bootAuth() {
+  try {
+    await ensureFirebase();
+    _fb.onAuthStateChanged(auth, async user => {
+      if (!user) { showLogin(); return; }
+      const ok = await isAdminUser(user.uid);
+      if (!ok) {
+        showLogin('Tu cuenta no tiene permisos de administrador.');
+        try { await _fb.signOut(auth); } catch(e) {}
+        return;
+      }
+      showAdminUI();
+      if (!_inited) { _inited = true; initAdmin(); }
+    });
+  } catch(e) {
+    showLogin('Error de conexión con Firebase.');
+  }
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootAuth); else bootAuth();
 
-// ── SPORT SELECTOR ──
+// SPORT SELECTOR
 function selSport(sp, el) {
   selectedSport = sp;
   document.querySelectorAll('#sport-sel .sport-opt').forEach(o => o.classList.remove('on'));
   el.classList.add('on');
 }
 
-// ── INIT ──
+// â”€â”€ INIT â”€â”€
 async function initAdmin() {
   try {
-    const { initializeApp, getApps, getApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
-    const { getFirestore, collection, query, orderBy, getDocs, addDoc, setDoc, deleteDoc, doc, where } =
-      await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-    const fbApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-    db = getFirestore(fbApp);
-    _fb = { collection, query, orderBy, getDocs, addDoc, setDoc, deleteDoc, doc, where };
+    await ensureFirebase();
     showStatus('st-add', 'ok', 'Conectado a Firebase');
     setTimeout(() => hideStatus('st-add'), 2500);
     loadList();
@@ -588,7 +637,7 @@ async function initAdmin() {
   }
 }
 
-// ── TABS ──
+// â”€â”€ TABS â”€â”€
 function swTab(t) {
   ['add','bulk','list','comp'].forEach(x => {
     document.getElementById('tab-'+x).classList.remove('on');
@@ -600,7 +649,7 @@ function swTab(t) {
   if (t === 'comp') loadCompList();
 }
 
-// ── SAVE INDIVIDUAL ──
+// â”€â”€ SAVE INDIVIDUAL â”€â”€
 async function saveWod() {
   const fecha = document.getElementById('f-fecha').value;
   const titulo = document.getElementById('f-titulo').value.trim();
@@ -644,7 +693,7 @@ function clearForm() {
   document.getElementById('f-intensity').value = 'media';
 }
 
-// ── EXCEL PARSE ──
+// â”€â”€ EXCEL PARSE â”€â”€
 function dzOver(e) { e.preventDefault(); document.getElementById('dz').classList.add('over'); }
 function dzLeave() { document.getElementById('dz').classList.remove('over'); }
 function dzDrop(e) { e.preventDefault(); dzLeave(); const f = e.dataTransfer.files[0]; if(f) parseExcel(f); }
@@ -694,7 +743,7 @@ function parseExcel(file) {
           if (k === 'fecha') return;
           if (nr[v] !== undefined && nr[v] !== '') w[k] = String(nr[v]).trim();
         });
-        if (!w.titulo && nr['título']) w.titulo = String(nr['título']).trim();
+        if (!w.titulo && nr['tÃ­tulo']) w.titulo = String(nr['tÃ­tulo']).trim();
         // Fallback columns
         if (!w.sport) w.sport = nr['deporte'] ? String(nr['deporte']).trim().toLowerCase() : 'running';
         if (!w.month && w.fecha) w.month = w.fecha.slice(0,7);
@@ -719,15 +768,15 @@ function renderPreview(wods) {
   const spMap = {running:'badge-gr',crossfit:'badge-rd',hyrox:'badge-pu',deka:'badge-or'};
   let thead = '<tr><th>Fecha</th><th>Deporte</th><th>Sede</th><th>Titulo</th><th>Tipo</th><th>Int.</th><th>Dur.</th></tr>';
   let tbody = wods.map(w =>
-    '<tr><td>'+( w.fecha||'')+'</td><td><span class="badge '+(spMap[w.sport]||'badge-bl')+'">'+(w.sport||'—')+'</span></td><td>'+(w.sede||'')+'</td><td>'+(w.titulo||'')+'</td><td>'+(w.type||'')+'</td>'
-    + '<td><span class="badge '+(iMap[w.intensity]||'badge-bl')+'">'+(w.intensity||'—')+'</span></td>'
-    + '<td>'+(w.duration||'—')+'</td></tr>'
+    '<tr><td>'+( w.fecha||'')+'</td><td><span class="badge '+(spMap[w.sport]||'badge-bl')+'">'+(w.sport||'â€”')+'</span></td><td>'+(w.sede||'')+'</td><td>'+(w.titulo||'')+'</td><td>'+(w.type||'')+'</td>'
+    + '<td><span class="badge '+(iMap[w.intensity]||'badge-bl')+'">'+(w.intensity||'â€”')+'</span></td>'
+    + '<td>'+(w.duration||'â€”')+'</td></tr>'
   ).join('');
   document.getElementById('prev-table').querySelector('thead').innerHTML = thead;
   document.getElementById('prev-table').querySelector('tbody').innerHTML = tbody;
 }
 
-// ── BULK UPLOAD ──
+// â”€â”€ BULK UPLOAD â”€â”€
 async function bulkUpload() {
   if (!db || !_fb) { showStatus('st-bulk','err','Sin conexion Firebase.'); return; }
   if (!bulkWods.length) { showStatus('st-bulk','err','No hay WODs para subir.'); return; }
@@ -762,7 +811,7 @@ function clearBulk() {
   document.getElementById('prog-fill').style.width = '0%';
 }
 
-// ── LIST ──
+// â”€â”€ LIST â”€â”€
 async function loadList() {
   if (!db || !_fb) { document.getElementById('wod-list').innerHTML = '<div class="empty">Sin conexion Firebase</div>'; return; }
   document.getElementById('wod-list').innerHTML = '<div class="empty">Cargando...</div>';
@@ -815,14 +864,14 @@ function renderList() {
     + '<span class="badge '+(spMap[w.sport||'running']||'badge-bl')+'" style="margin-right:6px;min-width:60px;justify-content:center">'+(w.sport||'running')+'</span>'
     + '<div style="flex:1;min-width:0">'
     + '<div class="wr-title">'+(w.titulo||w.title||'Sin titulo')+'</div>'
-    + '<div class="wr-sede">'+(w.sede||'')+' '+(w.type?'· '+w.type:'')+'</div>'
+    + '<div class="wr-sede">'+(w.sede||'')+' '+(w.type?'Â· '+w.type:'')+'</div>'
     + '</div>'
     + '<button class="wr-del" onclick="confirmDel(\''+w.id+'\',\''+( w.titulo||w.title||'').replace(/'/g,"\\'")+'\')">Eliminar</button>'
     + '</div>'
   ).join('');
 }
 
-// ── DELETE ──
+// â”€â”€ DELETE â”€â”€
 let pendingDelId = null;
 function confirmDel(id, title) {
   pendingDelId = id;
@@ -841,14 +890,14 @@ async function doDelete() {
     allWods = allWods.filter(w => w.id !== idToDelete);
     buildMonthFilters();
     renderList();
-    showStatus('st-list','ok','✓ WOD eliminado');
+    showStatus('st-list','ok','âœ“ WOD eliminado');
     setTimeout(()=>hideStatus('st-list'),2500);
   } catch(e) {
     showStatus('st-list','err','Error al eliminar: '+e.message);
   }
 }
 
-// ── HELPERS ──
+// â”€â”€ HELPERS â”€â”€
 function showStatus(id, type, msg) {
   const el = document.getElementById(id);
   el.className = 'status show ' + type;
@@ -856,16 +905,16 @@ function showStatus(id, type, msg) {
 }
 function hideStatus(id) { document.getElementById(id).className = 'status'; }
 
-// ════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // COMPETICIONES
-// ════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 let bulkComps = [], allComps = [], compCatFilter = 'all';
 
 async function saveComp() {
   const fecha = document.getElementById('c-fecha').value;
   const name  = document.getElementById('c-name').value.trim();
   if (!fecha || !name) { showStatus('st-comp-add','err','Fecha y nombre son obligatorios.'); return; }
-  if (!db) { showStatus('st-comp-add','err','Sin conexión Firebase.'); return; }
+  if (!db) { showStatus('st-comp-add','err','Sin conexiÃ³n Firebase.'); return; }
   const comp = {
     date:  fecha,
     name,
@@ -879,7 +928,7 @@ async function saveComp() {
   showStatus('st-comp-add','loading','Guardando...');
   try {
     await _fb.addDoc(_fb.collection(db,'competiciones'), comp);
-    showStatus('st-comp-add','ok','✓ Competición guardada');
+    showStatus('st-comp-add','ok','âœ“ CompeticiÃ³n guardada');
     clearCompForm();
     loadCompList();
   } catch(e) { showStatus('st-comp-add','err','Error: '+e.message); }
@@ -917,9 +966,9 @@ function parseCompExcel(file) {
         };
       }).filter(c => c.date && c.date.match(/\d{4}-\d{2}-\d{2}/) && c.name);
 
-      if (!comps.length) { showStatus('st-comp-parse','err','No se encontraron competiciones válidas. Revisa las columnas (date, name).'); return; }
+      if (!comps.length) { showStatus('st-comp-parse','err','No se encontraron competiciones vÃ¡lidas. Revisa las columnas (date, name).'); return; }
       bulkComps = comps;
-      showStatus('st-comp-parse','ok','✓ '+comps.length+' competiciones encontradas');
+      showStatus('st-comp-parse','ok','âœ“ '+comps.length+' competiciones encontradas');
       renderCompPreview(comps);
     } catch(err) { showStatus('st-comp-parse','err','Error al leer: '+err.message); }
   };
@@ -941,7 +990,7 @@ function renderCompPreview(comps) {
 }
 
 async function bulkUploadComps() {
-  if (!db || !_fb) { showStatus('st-comp-bulk','err','Sin conexión Firebase.'); return; }
+  if (!db || !_fb) { showStatus('st-comp-bulk','err','Sin conexiÃ³n Firebase.'); return; }
   if (!bulkComps.length) return;
   document.getElementById('btn-comp-upload').disabled = true;
   document.getElementById('prog-wrap-comp').classList.add('show');
@@ -958,7 +1007,7 @@ async function bulkUploadComps() {
     document.getElementById('prog-label-comp').textContent = (i+1)+' / '+bulkComps.length+' subidas';
   }
   document.getElementById('btn-comp-upload').disabled = false;
-  if (fail===0) { showStatus('st-comp-bulk','ok','✓ '+ok+' competiciones subidas'); loadCompList(); }
+  if (fail===0) { showStatus('st-comp-bulk','ok','âœ“ '+ok+' competiciones subidas'); loadCompList(); }
   else showStatus('st-comp-bulk','err', ok+' subidas, '+fail+' fallaron.');
 }
 
@@ -971,7 +1020,7 @@ function clearCompBulk() {
 }
 
 async function loadCompList() {
-  if (!db || !_fb) { document.getElementById('comp-list').innerHTML='<div class="empty">Sin conexión</div>'; return; }
+  if (!db || !_fb) { document.getElementById('comp-list').innerHTML='<div class="empty">Sin conexiÃ³n</div>'; return; }
   document.getElementById('comp-list').innerHTML='<div class="empty">Cargando...</div>';
   try {
     const snap = await _fb.getDocs(_fb.query(_fb.collection(db,'competiciones'), _fb.orderBy('date','asc')));
@@ -1014,8 +1063,8 @@ function renderCompList() {
 let pendingDelCompId = null;
 function confirmDelComp(id, name) {
   pendingDelCompId = id;
-  document.getElementById('modal-title').textContent = 'Eliminar competición';
-  document.getElementById('modal-msg').innerHTML = 'Eliminar <strong>'+name+'</strong>?<br>Esta acción no se puede deshacer.';
+  document.getElementById('modal-title').textContent = 'Eliminar competiciÃ³n';
+  document.getElementById('modal-msg').innerHTML = 'Eliminar <strong>'+name+'</strong>?<br>Esta acciÃ³n no se puede deshacer.';
   document.getElementById('modal-confirm').onclick = () => doDeleteComp();
   document.getElementById('modal-ov').classList.add('open');
 }
@@ -1027,7 +1076,7 @@ async function doDeleteComp() {
     await _fb.deleteDoc(_fb.doc(db,'competiciones',idToDelete));
     allComps = allComps.filter(c => c.id !== idToDelete);
     renderCompList();
-    showStatus('st-comp-list','ok','✓ Competición eliminada');
+    showStatus('st-comp-list','ok','âœ“ CompeticiÃ³n eliminada');
     setTimeout(()=>hideStatus('st-comp-list'),2500);
   } catch(e) { showStatus('st-comp-list','err','Error: '+e.message); }
   pendingDelCompId = null;
@@ -1047,3 +1096,4 @@ window.confirmDel=confirmDel; window.doDelete=doDelete; window.closeModal=closeM
 </script>
 </body>
 </html>
+

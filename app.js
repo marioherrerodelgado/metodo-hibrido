@@ -8,7 +8,7 @@ const auth=getAuth(app),db=getFirestore(app);
 const MN=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const MS=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 const DF=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
-const td=new Date();let Y=td.getFullYear(),M=td.getMonth(),fl="all",ws=[],cn="hoy",cf="all",monthLoaded=false,compsLive=[],uemail="",goalPrefs=["all"],boxPrefs=["comunidad","herramientas","equipate","soporte","appinfo"],goalPrefSaved=false;
+const td=new Date();let Y=td.getFullYear(),M=td.getMonth(),fl="all",ws=[],cn="hoy",cf="all",monthLoaded=false,compsLive=[],uemail="",goalPrefs=["all"],boxPrefs=["comunidad","herramientas","equipate","soporte","appinfo"];
 const SPORTS=["running","hyrox","deka","crossfit"];
 
 const COMPS=[
@@ -77,11 +77,9 @@ function loadPrefs(){
     const gRaw=localStorage.getItem(prefKey("goals"));
     const g=JSON.parse(gRaw||"null");
     const b=JSON.parse(localStorage.getItem(prefKey("box"))||"null");
-    goalPrefSaved=!!gRaw;
     goalPrefs=Array.isArray(g)&&g.length?g:["all"];
     boxPrefs=Array.isArray(b)&&b.length?b:["comunidad","herramientas","equipate","soporte","appinfo"];
   }catch(e){goalPrefs=["all"];boxPrefs=["comunidad","herramientas","equipate","soporte","appinfo"];}
-  if(!goalPrefSaved)setTimeout(()=>window.openGoalSetup(),200);
 }
 function savePrefs(){localStorage.setItem(prefKey("goals"),JSON.stringify(goalPrefs));localStorage.setItem(prefKey("box"),JSON.stringify(boxPrefs));}
 function applyGoalPrefs(){

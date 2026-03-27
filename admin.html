@@ -206,7 +206,7 @@ table.prev tr:hover td{background:var(--sf2)}
     <div class="tab on" id="tab-add" onclick="swTab('add')">Subir WOD</div>
     <div class="tab" id="tab-bulk" onclick="swTab('bulk')">Carga masiva</div>
     <div class="tab" id="tab-list" onclick="swTab('list')">Ver / Eliminar</div>
-      <div class="tab" id="tab-comp" onclick="swTab('comp')">ðŸ Competiciones</div>
+      <div class="tab" id="tab-comp" onclick="swTab('comp')">🏁 Competiciones</div>
   </div>
 
   <div class="main">
@@ -229,7 +229,7 @@ table.prev tr:hover td{background:var(--sf2)}
       </div>
 
       <div class="card">
-        <div class="card-title">Informacion basica</div>
+        <div class="card-title">Información básica</div>
         <div class="card-sub">Campos obligatorios para mostrar el WOD en la app</div>
         <div class="form-grid">
           <div class="field">
@@ -250,8 +250,8 @@ table.prev tr:hover td{background:var(--sf2)}
             </select>
           </div>
           <div class="field fg-full">
-            <label class="lbl">Titulo del entrenamiento <span>*</span></label>
-            <input type="text" class="fi2" id="f-titulo" placeholder="ej: Strength + BREATH â€” Lunes Box">
+            <label class="lbl">Título del entrenamiento <span>*</span></label>
+            <input type="text" class="fi2" id="f-titulo" placeholder="ej: Strength + BREATH — Lunes Box">
           </div>
           <div class="field">
             <label class="lbl">Tipo</label>
@@ -286,17 +286,17 @@ table.prev tr:hover td{background:var(--sf2)}
               <option value="media">Moderado</option>
               <option value="baja">Suave</option>
               <option value="alta">Exigente</option>
-              <option value="maxima">Maxima</option>
+              <option value="maxima">Máxima</option>
             </select>
           </div>
           <div class="field">
-            <label class="lbl">Duracion</label>
+            <label class="lbl">Duración</label>
             <input type="text" class="fi2" id="f-duration" placeholder="ej: 60'">
           </div>
           <div class="field">
             <label class="lbl">Volumen</label>
             <select class="fi2" id="f-volume">
-              <option value="">â€”</option>
+              <option value="">—</option>
               <option>Bajo</option>
               <option>Medio</option>
               <option>Alto</option>
@@ -308,7 +308,7 @@ table.prev tr:hover td{background:var(--sf2)}
 
       <div class="card">
         <div class="card-title">Contenido del entrenamiento</div>
-        <div class="card-sub">Usa una linea por ejercicio / instruccion</div>
+        <div class="card-sub">Usa una línea por ejercicio / instrucción</div>
         <div class="form-grid">
           <div class="field fg-full">
             <label class="lbl">Nota del entrenador</label>
@@ -316,7 +316,7 @@ table.prev tr:hover td{background:var(--sf2)}
           </div>
           <div class="field">
             <label class="lbl">Calentamiento / MOVE</label>
-            <textarea class="fi2 ta" id="f-warmup" placeholder="Movilidad, activacion..."></textarea>
+            <textarea class="fi2 ta" id="f-warmup" placeholder="Movilidad, activación..."></textarea>
           </div>
           <div class="field">
             <label class="lbl">Parte principal <span>*</span></label>
@@ -353,9 +353,9 @@ table.prev tr:hover td{background:var(--sf2)}
         <div class="card-sub">Columnas: fecha, month, <strong>sport</strong>, sede, titulo, intensity, duration, volume, type, notes, warmup, main, metcon, cooldown</div>
         <div class="dropzone" id="dz" ondragover="dzOver(event)" ondragleave="dzLeave()" ondrop="dzDrop(event)">
           <input type="file" accept=".xlsx,.xls,.csv" onchange="dzFile(this)">
-          <div class="dz-ic">ðŸ“Š</div>
+          <div class="dz-ic">📊</div>
           <div class="dz-title">Arrastra el Excel aqui</div>
-          <div class="dz-sub">o haz clic para seleccionar Â· .xlsx / .csv</div>
+          <div class="dz-sub">o haz clic para seleccionar · .xlsx / .csv</div>
         </div>
         <div class="status" id="st-parse"></div>
       </div>
@@ -368,7 +368,7 @@ table.prev tr:hover td{background:var(--sf2)}
         </div>
         <div class="card">
           <div class="card-title">3. Subir a Firebase</div>
-          <div class="card-sub">Se crearan los WODs en la coleccion <code>wods</code></div>
+          <div class="card-sub">Se crearán los WODs en la colección <code>wods</code></div>
           <div class="btn-row">
             <button class="btn btn-g" id="btn-upload" onclick="bulkUpload()">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 4l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 10v1a1 1 0 001 1h8a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -413,7 +413,7 @@ table.prev tr:hover td{background:var(--sf2)}
 
       <!-- INDIVIDUAL -->
       <div class="card">
-        <div class="card-title">AÃ±adir competiciÃ³n</div>
+        <div class="card-title">Añadir competición</div>
         <div class="card-sub">Rellena los campos y guarda en Firebase</div>
         <div class="form-grid">
           <div class="field">
@@ -421,7 +421,7 @@ table.prev tr:hover td{background:var(--sf2)}
             <input type="date" class="fi2" id="c-fecha">
           </div>
           <div class="field">
-            <label class="lbl">CategorÃ­a</label>
+            <label class="lbl">Categoría</label>
             <select class="fi2" id="c-cat">
               <option value="running">Running</option>
               <option value="hyrox">Hyrox</option>
@@ -431,7 +431,7 @@ table.prev tr:hover td{background:var(--sf2)}
           </div>
           <div class="field fg-full">
             <label class="lbl">Nombre <span>*</span></label>
-            <input type="text" class="fi2" id="c-name" placeholder="ej: MaratÃ³n de Madrid">
+            <input type="text" class="fi2" id="c-name" placeholder="ej: Maratón de Madrid">
           </div>
           <div class="field">
             <label class="lbl">Distancia / Formato</label>
@@ -443,13 +443,13 @@ table.prev tr:hover td{background:var(--sf2)}
           </div>
           <div class="field fg-full">
             <label class="lbl">Nota (opcional)</label>
-            <input type="text" class="fi2" id="c-note" placeholder="ej: 22-24 may Â· inscripciÃ³n abierta">
+            <input type="text" class="fi2" id="c-note" placeholder="ej: 22-24 may · inscripción abierta">
           </div>
         </div>
         <div class="btn-row">
           <button class="btn btn-g" onclick="saveComp()">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Guardar competiciÃ³n
+            Guardar competición
           </button>
           <button class="btn btn-b" onclick="clearCompForm()">Limpiar</button>
         </div>
@@ -459,12 +459,12 @@ table.prev tr:hover td{background:var(--sf2)}
       <!-- CARGA MASIVA -->
       <div class="card">
         <div class="card-title">Carga masiva desde Excel</div>
-        <div class="card-sub">Columnas obligatorias: <strong>date</strong> (YYYY-MM-DD), <strong>name</strong> Â· Opcionales: <strong>dist</strong>, <strong>lugar</strong>, <strong>cat</strong> (running/hyrox/deka/crossfit), <strong>note</strong></div>
+        <div class="card-sub">Columnas obligatorias: <strong>date</strong> (YYYY-MM-DD), <strong>name</strong> · Opcionales: <strong>dist</strong>, <strong>lugar</strong>, <strong>cat</strong> (running/hyrox/deka/crossfit), <strong>note</strong></div>
         <div class="dropzone" id="dz-comp" ondragover="dzCompOver(event)" ondragleave="dzCompLeave()" ondrop="dzCompDrop(event)">
           <input type="file" accept=".xlsx,.xls" onchange="dzCompFile(this)">
-          <div class="dz-ic">ðŸ</div>
+          <div class="dz-ic">🏁</div>
           <div class="dz-title">Arrastra el Excel de competiciones</div>
-          <div class="dz-sub">o haz clic Â· .xlsx</div>
+          <div class="dz-sub">o haz clic · .xlsx</div>
         </div>
         <div class="status" id="st-comp-parse"></div>
       </div>
@@ -477,7 +477,7 @@ table.prev tr:hover td{background:var(--sf2)}
         </div>
         <div class="card">
           <div class="card-title">Subir a Firebase</div>
-          <div class="card-sub">Se guardarÃ¡n en la colecciÃ³n <code>competiciones</code></div>
+          <div class="card-sub">Se guardarán en la colección <code>competiciones</code></div>
           <div class="btn-row">
             <button class="btn btn-g" id="btn-comp-upload" onclick="bulkUploadComps()">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 4l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 10v1a1 1 0 001 1h8a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -497,9 +497,9 @@ table.prev tr:hover td{background:var(--sf2)}
       <div class="card">
         <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
           <span>Competiciones en Firebase</span>
-          <button class="btn btn-b" onclick="loadCompList()">â†» Actualizar</button>
+          <button class="btn btn-b" onclick="loadCompList()">↻ Actualizar</button>
         </div>
-        <div class="card-sub">Filtrar por categorÃ­a</div>
+        <div class="card-sub">Filtrar por categoría</div>
         <div class="filter-row2" id="comp-cat-filters" style="margin-top:8px">
           <div class="pill on" data-cf="all" onclick="setCompCatF('all',this)">Todas</div>
           <div class="pill" data-cf="running" onclick="setCompCatF('running',this)">Running</div>
@@ -519,7 +519,7 @@ table.prev tr:hover td{background:var(--sf2)}
 <div class="modal-ov" id="modal-ov">
   <div class="modal-box">
     <div class="modal-title" id="modal-title">Eliminar WOD?</div>
-    <div class="modal-msg" id="modal-msg">Esta accion no se puede deshacer.</div>
+    <div class="modal-msg" id="modal-msg">Esta acción no se puede deshacer.</div>
     <div class="modal-btns">
       <button class="btn btn-b" onclick="closeModal()">Cancelar</button>
       <button class="btn btn-r" id="modal-confirm" onclick="doDelete()">Eliminar</button>
@@ -628,7 +628,7 @@ function selSport(sp, el) {
   el.classList.add('on');
 }
 
-// â”€â”€ INIT â”€â”€
+// INIT
 async function initAdmin() {
   try {
     await ensureFirebase();
@@ -636,11 +636,11 @@ async function initAdmin() {
     setTimeout(() => hideStatus('st-add'), 2500);
     loadList();
   } catch(e) {
-    showStatus('st-add', 'err', 'Sin conexion Firebase: ' + e.message);
+    showStatus('st-add', 'err', 'Sin conexión Firebase: ' + e.message);
   }
 }
 
-// â”€â”€ TABS â”€â”€
+// TABS
 function swTab(t) {
   ['add','bulk','list','comp'].forEach(x => {
     document.getElementById('tab-'+x).classList.remove('on');
@@ -652,7 +652,7 @@ function swTab(t) {
   if (t === 'comp') loadCompList();
 }
 
-// â”€â”€ SAVE INDIVIDUAL â”€â”€
+// SAVE INDIVIDUAL
 async function saveWod() {
   const fecha = document.getElementById('f-fecha').value;
   const titulo = document.getElementById('f-titulo').value.trim();
@@ -696,7 +696,7 @@ function clearForm() {
   document.getElementById('f-intensity').value = 'media';
 }
 
-// â”€â”€ EXCEL PARSE â”€â”€
+// EXCEL PARSE
 function dzOver(e) { e.preventDefault(); document.getElementById('dz').classList.add('over'); }
 function dzLeave() { document.getElementById('dz').classList.remove('over'); }
 function dzDrop(e) { e.preventDefault(); dzLeave(); const f = e.dataTransfer.files[0]; if(f) parseExcel(f); }
@@ -746,14 +746,14 @@ function parseExcel(file) {
           if (k === 'fecha') return;
           if (nr[v] !== undefined && nr[v] !== '') w[k] = String(nr[v]).trim();
         });
-        if (!w.titulo && nr['tÃ­tulo']) w.titulo = String(nr['tÃ­tulo']).trim();
+        if (!w.titulo && nr['título']) w.titulo = String(nr['título']).trim();
         // Fallback columns
         if (!w.sport) w.sport = nr['deporte'] ? String(nr['deporte']).trim().toLowerCase() : 'running';
         if (!w.month && w.fecha) w.month = w.fecha.slice(0,7);
         return w;
       }).filter(w => w.fecha && w.titulo);
 
-      if (!wods.length) { showStatus('st-parse','err','No se encontraron WODs validos.'); return; }
+      if (!wods.length) { showStatus('st-parse','err','No se encontraron WODs válidos.'); return; }
       bulkWods = wods;
       showStatus('st-parse','ok', wods.length + ' WODs encontrados');
       renderPreview(wods);
@@ -771,17 +771,17 @@ function renderPreview(wods) {
   const spMap = {running:'badge-gr',crossfit:'badge-rd',hyrox:'badge-pu',deka:'badge-or'};
   let thead = '<tr><th>Fecha</th><th>Deporte</th><th>Sede</th><th>Titulo</th><th>Tipo</th><th>Int.</th><th>Dur.</th></tr>';
   let tbody = wods.map(w =>
-    '<tr><td>'+( w.fecha||'')+'</td><td><span class="badge '+(spMap[w.sport]||'badge-bl')+'">'+(w.sport||'â€”')+'</span></td><td>'+(w.sede||'')+'</td><td>'+(w.titulo||'')+'</td><td>'+(w.type||'')+'</td>'
-    + '<td><span class="badge '+(iMap[w.intensity]||'badge-bl')+'">'+(w.intensity||'â€”')+'</span></td>'
-    + '<td>'+(w.duration||'â€”')+'</td></tr>'
+    '<tr><td>'+( w.fecha||'')+'</td><td><span class="badge '+(spMap[w.sport]||'badge-bl')+'">'+(w.sport||'—')+'</span></td><td>'+(w.sede||'')+'</td><td>'+(w.titulo||'')+'</td><td>'+(w.type||'')+'</td>'
+    + '<td><span class="badge '+(iMap[w.intensity]||'badge-bl')+'">'+(w.intensity||'—')+'</span></td>'
+    + '<td>'+(w.duration||'—')+'</td></tr>'
   ).join('');
   document.getElementById('prev-table').querySelector('thead').innerHTML = thead;
   document.getElementById('prev-table').querySelector('tbody').innerHTML = tbody;
 }
 
-// â”€â”€ BULK UPLOAD â”€â”€
+// BULK UPLOAD
 async function bulkUpload() {
-  if (!db || !_fb) { showStatus('st-bulk','err','Sin conexion Firebase.'); return; }
+  if (!db || !_fb) { showStatus('st-bulk','err','Sin conexión Firebase.'); return; }
   if (!bulkWods.length) { showStatus('st-bulk','err','No hay WODs para subir.'); return; }
   document.getElementById('btn-upload').disabled = true;
   document.getElementById('prog-wrap').classList.add('show');
@@ -814,9 +814,9 @@ function clearBulk() {
   document.getElementById('prog-fill').style.width = '0%';
 }
 
-// â”€â”€ LIST â”€â”€
+// LIST
 async function loadList() {
-  if (!db || !_fb) { document.getElementById('wod-list').innerHTML = '<div class="empty">Sin conexion Firebase</div>'; return; }
+  if (!db || !_fb) { document.getElementById('wod-list').innerHTML = '<div class="empty">Sin conexión Firebase</div>'; return; }
   document.getElementById('wod-list').innerHTML = '<div class="empty">Cargando...</div>';
   try {
     const snap = await _fb.getDocs(_fb.query(_fb.collection(db,'wods'), _fb.orderBy('fecha','asc')));
@@ -867,19 +867,19 @@ function renderList() {
     + '<span class="badge '+(spMap[w.sport||'running']||'badge-bl')+'" style="margin-right:6px;min-width:60px;justify-content:center">'+(w.sport||'running')+'</span>'
     + '<div style="flex:1;min-width:0">'
     + '<div class="wr-title">'+(w.titulo||w.title||'Sin titulo')+'</div>'
-    + '<div class="wr-sede">'+(w.sede||'')+' '+(w.type?'Â· '+w.type:'')+'</div>'
+    + '<div class="wr-sede">'+(w.sede||'')+' '+(w.type?'· '+w.type:'')+'</div>'
     + '</div>'
     + '<button class="wr-del" onclick="confirmDel(\''+w.id+'\',\''+( w.titulo||w.title||'').replace(/'/g,"\\'")+'\')">Eliminar</button>'
     + '</div>'
   ).join('');
 }
 
-// â”€â”€ DELETE â”€â”€
+// DELETE
 let pendingDelId = null;
 function confirmDel(id, title) {
   pendingDelId = id;
   document.getElementById('modal-title').textContent = 'Eliminar WOD';
-  document.getElementById('modal-msg').innerHTML = 'Eliminar <strong>'+title+'</strong>?<br>Esta accion no se puede deshacer.';
+  document.getElementById('modal-msg').innerHTML = 'Eliminar <strong>'+title+'</strong>?<br>Esta acción no se puede deshacer.';
   document.getElementById('modal-confirm').onclick = () => doDelete();
   document.getElementById('modal-ov').classList.add('open');
 }
@@ -893,14 +893,14 @@ async function doDelete() {
     allWods = allWods.filter(w => w.id !== idToDelete);
     buildMonthFilters();
     renderList();
-    showStatus('st-list','ok','âœ“ WOD eliminado');
+    showStatus('st-list','ok','✓ WOD eliminado');
     setTimeout(()=>hideStatus('st-list'),2500);
   } catch(e) {
     showStatus('st-list','err','Error al eliminar: '+e.message);
   }
 }
 
-// â”€â”€ HELPERS â”€â”€
+// HELPERS
 function showStatus(id, type, msg) {
   const el = document.getElementById(id);
   el.className = 'status show ' + type;
@@ -908,16 +908,16 @@ function showStatus(id, type, msg) {
 }
 function hideStatus(id) { document.getElementById(id).className = 'status'; }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ========================================
 // COMPETICIONES
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ========================================
 let bulkComps = [], allComps = [], compCatFilter = 'all';
 
 async function saveComp() {
   const fecha = document.getElementById('c-fecha').value;
   const name  = document.getElementById('c-name').value.trim();
   if (!fecha || !name) { showStatus('st-comp-add','err','Fecha y nombre son obligatorios.'); return; }
-  if (!db) { showStatus('st-comp-add','err','Sin conexiÃ³n Firebase.'); return; }
+  if (!db) { showStatus('st-comp-add','err','Sin conexión Firebase.'); return; }
   const comp = {
     date:  fecha,
     name,
@@ -931,7 +931,7 @@ async function saveComp() {
   showStatus('st-comp-add','loading','Guardando...');
   try {
     await _fb.addDoc(_fb.collection(db,'competiciones'), comp);
-    showStatus('st-comp-add','ok','âœ“ CompeticiÃ³n guardada');
+    showStatus('st-comp-add','ok','✓ Competición guardada');
     clearCompForm();
     loadCompList();
   } catch(e) { showStatus('st-comp-add','err','Error: '+e.message); }
@@ -969,9 +969,9 @@ function parseCompExcel(file) {
         };
       }).filter(c => c.date && c.date.match(/\d{4}-\d{2}-\d{2}/) && c.name);
 
-      if (!comps.length) { showStatus('st-comp-parse','err','No se encontraron competiciones vÃ¡lidas. Revisa las columnas (date, name).'); return; }
+      if (!comps.length) { showStatus('st-comp-parse','err','No se encontraron competiciones válidas. Revisa las columnas (date, name).'); return; }
       bulkComps = comps;
-      showStatus('st-comp-parse','ok','âœ“ '+comps.length+' competiciones encontradas');
+      showStatus('st-comp-parse','ok','✓ '+comps.length+' competiciones encontradas');
       renderCompPreview(comps);
     } catch(err) { showStatus('st-comp-parse','err','Error al leer: '+err.message); }
   };
@@ -993,7 +993,7 @@ function renderCompPreview(comps) {
 }
 
 async function bulkUploadComps() {
-  if (!db || !_fb) { showStatus('st-comp-bulk','err','Sin conexiÃ³n Firebase.'); return; }
+  if (!db || !_fb) { showStatus('st-comp-bulk','err','Sin conexión Firebase.'); return; }
   if (!bulkComps.length) return;
   document.getElementById('btn-comp-upload').disabled = true;
   document.getElementById('prog-wrap-comp').classList.add('show');
@@ -1010,7 +1010,7 @@ async function bulkUploadComps() {
     document.getElementById('prog-label-comp').textContent = (i+1)+' / '+bulkComps.length+' subidas';
   }
   document.getElementById('btn-comp-upload').disabled = false;
-  if (fail===0) { showStatus('st-comp-bulk','ok','âœ“ '+ok+' competiciones subidas'); loadCompList(); }
+  if (fail===0) { showStatus('st-comp-bulk','ok','✓ '+ok+' competiciones subidas'); loadCompList(); }
   else showStatus('st-comp-bulk','err', ok+' subidas, '+fail+' fallaron.');
 }
 
@@ -1023,7 +1023,7 @@ function clearCompBulk() {
 }
 
 async function loadCompList() {
-  if (!db || !_fb) { document.getElementById('comp-list').innerHTML='<div class="empty">Sin conexiÃ³n</div>'; return; }
+  if (!db || !_fb) { document.getElementById('comp-list').innerHTML='<div class="empty">Sin conexión</div>'; return; }
   document.getElementById('comp-list').innerHTML='<div class="empty">Cargando...</div>';
   try {
     const snap = await _fb.getDocs(_fb.query(_fb.collection(db,'competiciones'), _fb.orderBy('date','asc')));
@@ -1066,8 +1066,8 @@ function renderCompList() {
 let pendingDelCompId = null;
 function confirmDelComp(id, name) {
   pendingDelCompId = id;
-  document.getElementById('modal-title').textContent = 'Eliminar competiciÃ³n';
-  document.getElementById('modal-msg').innerHTML = 'Eliminar <strong>'+name+'</strong>?<br>Esta acciÃ³n no se puede deshacer.';
+  document.getElementById('modal-title').textContent = 'Eliminar competición';
+  document.getElementById('modal-msg').innerHTML = 'Eliminar <strong>'+name+'</strong>?<br>Esta acción no se puede deshacer.';
   document.getElementById('modal-confirm').onclick = () => doDeleteComp();
   document.getElementById('modal-ov').classList.add('open');
 }
@@ -1079,7 +1079,7 @@ async function doDeleteComp() {
     await _fb.deleteDoc(_fb.doc(db,'competiciones',idToDelete));
     allComps = allComps.filter(c => c.id !== idToDelete);
     renderCompList();
-    showStatus('st-comp-list','ok','âœ“ CompeticiÃ³n eliminada');
+    showStatus('st-comp-list','ok','✓ Competición eliminada');
     setTimeout(()=>hideStatus('st-comp-list'),2500);
   } catch(e) { showStatus('st-comp-list','err','Error: '+e.message); }
   pendingDelCompId = null;
@@ -1099,4 +1099,5 @@ window.confirmDel=confirmDel; window.doDelete=doDelete; window.closeModal=closeM
 </script>
 </body>
 </html>
+
 

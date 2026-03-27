@@ -49,21 +49,21 @@ body{font-family:"DM Sans",-apple-system,sans-serif;background:var(--bg);color:v
     <a class="back" href="index.html">Volver a la app</a>
   </div>
   <div class="title">Timer WOD</div>
-  <div class="sub">MÃ©todo HÃ­brido</div>
+  <div class="sub">Método Híbrido</div>
 
   <div class="card" id="setup">
     <div class="modes" id="modes">
       <button class="mode on" data-mode="tabata">Tabata</button>
       <button class="mode" data-mode="amrap">AMRAP</button>
       <button class="mode" data-mode="emom">EMOM</button>
-      <button class="mode" data-mode="countdown">Cuenta atrÃ¡s</button>
+      <button class="mode" data-mode="countdown">Cuenta atrás</button>
     </div>
     <div class="grid" id="fields"></div>
     <button class="btn start" id="startBtn">Iniciar</button>
   </div>
 
   <div class="card screen" id="timer">
-    <div class="phase" id="phase">PrepÃ¡rate</div>
+    <div class="phase" id="phase">Prepárate</div>
     <div class="big" id="time">3</div>
     <div class="round" id="round"></div>
     <div class="bar"><div class="fill" id="fill"></div></div>
@@ -75,8 +75,8 @@ body{font-family:"DM Sans",-apple-system,sans-serif;background:var(--bg);color:v
 
   <div class="card screen" id="finish">
     <div class="phase">Completado</div>
-    <div class="big" style="font-size:52px">Â¡Buen trabajo!</div>
-    <div class="chip" id="finishMsg">SesiÃ³n terminada</div>
+    <div class="big" style="font-size:52px">¡Buen trabajo!</div>
+    <div class="chip" id="finishMsg">Sesión terminada</div>
     <div style="margin-top:12px"><button class="btn start" id="againBtn">Nuevo timer</button></div>
   </div>
 </div>
@@ -145,11 +145,11 @@ function startMain() {
   if (mode === "emom") {
     round = 1; total = cfg.rounds;
     left = cfg.roundSecs; dur = cfg.roundSecs;
-    ui("EMOM", fmt(left), `Ronda ${round}/${total} Â· ${cfg.roundSecs / 60} min`, 0);
+    ui("EMOM", fmt(left), `Ronda ${round}/${total} · ${cfg.roundSecs / 60} min`, 0);
   }
   if (mode === "countdown") {
     left = cfg.total; dur = cfg.total;
-    ui("Cuenta atrÃ¡s", fmt(left), "", 0);
+    ui("Cuenta atrás", fmt(left), "", 0);
   }
   intv = setInterval(tick, 1000);
 }
@@ -157,12 +157,12 @@ function startMain() {
 function start() {
   cfg = readCfg(); paused = false; setView("timer");
   let prep = 3;
-  ui("PrepÃ¡rate", prep, "", 1);
+  ui("Prepárate", prep, "", 1);
   clearInterval(intv);
   intv = setInterval(() => {
     prep--;
     if (prep <= 0) { clearInterval(intv); startMain(); return; }
-    ui("PrepÃ¡rate", prep, "", 1);
+    ui("Prepárate", prep, "", 1);
   }, 1000);
 }
 
@@ -186,27 +186,27 @@ function tick() {
     return;
   }
 
-  // EMOM â€” cuenta atrÃ¡s por ronda, avanza ronda al llegar a 0
+  // EMOM — cuenta atrás por ronda, avanza ronda al llegar a 0
   if (mode === "emom") {
     left--;
     if (left <= 0) {
       round++;
       if (round > total) { finish(`${total} rondas completadas`); return; }
       left = cfg.roundSecs; dur = cfg.roundSecs;
-      ui("EMOM", fmt(left), `Ronda ${round}/${total} Â· ${cfg.roundSecs / 60} min`, 0);
+      ui("EMOM", fmt(left), `Ronda ${round}/${total} · ${cfg.roundSecs / 60} min`, 0);
       return;
     }
-    ui("EMOM", fmt(left), `Ronda ${round}/${total} Â· ${cfg.roundSecs / 60} min`, 1 - left / dur);
+    ui("EMOM", fmt(left), `Ronda ${round}/${total} · ${cfg.roundSecs / 60} min`, 1 - left / dur);
     return;
   }
 
-  // AMRAP y COUNTDOWN â€” cuenta atrÃ¡s total
+  // AMRAP y COUNTDOWN — cuenta atrás total
   left--;
   if (left <= 0) {
-    finish(mode === "countdown" ? "Cuenta atrÃ¡s completada" : "Tiempo completado"); return;
+    finish(mode === "countdown" ? "Cuenta atrás completada" : "Tiempo completado"); return;
   }
   if (mode === "amrap")     ui("AMRAP", fmt(left), "", 1 - left / dur);
-  if (mode === "countdown") ui("Cuenta atrÃ¡s", fmt(left), "", 1 - left / dur);
+  if (mode === "countdown") ui("Cuenta atrás", fmt(left), "", 1 - left / dur);
 }
 
 document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => {

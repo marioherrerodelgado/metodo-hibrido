@@ -11,6 +11,27 @@ const DF=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
 const td=new Date();let Y=td.getFullYear(),M=td.getMonth(),fl="all",ws=[],cn="hoy",cf="all",monthLoaded=false,compsLive=[],uemail="",goalPrefs=["all"],boxPrefs=["comunidad","herramientas","equipate","soporte","appinfo"];
 const SPORTS=["running","hyrox","deka","crossfit"];
 
+function fixUtfText(v){
+  if(typeof v!=="string")return v;
+  let out=v;
+  for(let i=0;i<2;i++){
+    if(!/[ÃÂâð]/.test(out))break;
+    try{
+      const dec=decodeURIComponent(escape(out));
+      if(dec===out)break;
+      out=dec;
+    }catch(e){break;}
+  }
+  return out.replace(/\uFFFD/g,"").trim();
+}
+function fixUtfObj(obj){
+  const out={...obj};
+  Object.keys(out).forEach(k=>{
+    if(typeof out[k]==="string")out[k]=fixUtfText(out[k]);
+  });
+  return out;
+}
+
 const COMPS=[
 {date:"2026-03-22",name:"Media Maraton de Madrid",dist:"5/21 km",lugar:"Madrid",cat:"running"},
 {date:"2026-03-28",name:"MetLife Madrid 15K",dist:"15 km",lugar:"Madrid",cat:"running"},
@@ -148,14 +169,14 @@ async function lC(){
     sn.forEach(d=>{
       const c=d.data()||{};
       if(!c.date||!c.name)return;
-      tmp.push({
+      tmp.push(fixUtfObj({
         date:String(c.date),
         name:String(c.name),
         dist:String(c.dist||""),
         lugar:String(c.lugar||""),
         cat:String(c.cat||"running").toLowerCase(),
         note:String(c.note||"")
-      });
+      }));
     });
     tmp.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
     compsLive=tmp;
@@ -166,7 +187,7 @@ async function lC(){
 async function lM(){
   document.getElementById("msc").innerHTML='<div class="lw">Cargando<div class="lb"><div class="lf"></div></div></div>';
   document.getElementById("mpt").textContent=MS[M]+" "+Y;bS();bMM();
-  try{const ms=Y+"-"+String(M+1).padStart(2,"0");const sn=await getDocs(query(collection(db,"wods"),where("month","==",ms)));ws=[];sn.forEach(d=>ws.push({id:d.id,...d.data()}));}catch(e){ws=[];}
+  try{const ms=Y+"-"+String(M+1).padStart(2,"0");const sn=await getDocs(query(collection(db,"wods"),where("month","==",ms)));ws=[];sn.forEach(d=>ws.push(fixUtfObj({id:d.id,...d.data()})));}catch(e){ws=[];}
   monthLoaded=true;rM();
 }
 function gD(w){return w.fecha||w.date||"";}

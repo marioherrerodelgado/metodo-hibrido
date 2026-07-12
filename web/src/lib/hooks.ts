@@ -9,6 +9,7 @@ import {
   watchSessions,
   watchSkills,
 } from "./data";
+import { COMPETITIONS_SEED } from "./competitions-seed";
 import { accumulateLoad } from "./muscles";
 import type {
   Competition,
@@ -107,10 +108,15 @@ export function useWeeklyLoad(refISO: string = todayISO()) {
   }, [sessions, refISO]);
 }
 
+/**
+ * Competiciones. Si Firestore trae datos, mandan esos; si no, caemos al
+ * calendario que la app antigua llevaba escrito en el código, para no dejar
+ * la pestaña en blanco.
+ */
 export function useCompetitions(): Competition[] {
-  const [comps, setComps] = useState<Competition[]>([]);
+  const [comps, setComps] = useState<Competition[] | null>(null);
   useEffect(() => watchCompetitions(setComps), []);
-  return comps;
+  return comps?.length ? comps : COMPETITIONS_SEED;
 }
 
 export function useLifts(): LiftEntry[] {

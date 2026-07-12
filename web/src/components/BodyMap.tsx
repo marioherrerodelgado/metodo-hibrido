@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { Heart, RotateCcw } from "lucide-react";
+import { BACK, FRONT, SILHOUETTE, VIEWBOX } from "@/lib/body-shapes";
 import { LOAD_COLOR, LOAD_LABEL, loadLevel } from "@/lib/muscles";
 import { MUSCLE_LABEL, type MuscleGroup } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -10,195 +11,20 @@ import { cn } from "@/lib/utils";
 /**
  * Mapa de carga corporal.
  *
- * Cuerpo anatómico estilizado (geométrico, no ilustrativo) con las zonas
- * pintadas según la carga acumulada de la semana:
+ * El cuerpo se pinta según la carga acumulada de la semana:
  *   gris = sin trabajar · azul = suave · amarillo = cargado · rojo = muy cargado
  *
- * `cardio` no es una zona del cuerpo, así que se muestra aparte como
- * indicador de sistema cardiovascular.
+ * `cardio` no es una zona del cuerpo, así que va aparte como indicador del
+ * sistema cardiovascular en vez de inventarle un músculo.
+ *
+ * La geometría vive en `lib/body-shapes.ts`, que comparte con el script
+ * `scripts/render-body.ts`: lo que se revisa es exactamente lo que se envía.
  */
-
-interface Region {
-  id: MuscleGroup;
-  /** Formas que componen la zona (se pintan todas del mismo color). */
-  shapes: React.ReactNode;
-}
-
-const S = {
-  base: "#17171c",
-  line: "#2c2c34",
-};
-
-// ─── Vista frontal ────────────────────────────────────────────────────────
-
-const FRONT: Region[] = [
-  {
-    id: "hombros",
-    shapes: (
-      <>
-        <ellipse cx="58" cy="86" rx="17" ry="15" />
-        <ellipse cx="142" cy="86" rx="17" ry="15" />
-      </>
-    ),
-  },
-  {
-    id: "pecho",
-    shapes: (
-      <>
-        <path d="M78 74 h20 a2 2 0 0 1 2 2 v28 a4 4 0 0 1-5 4 l-17-4 a5 5 0 0 1-4-5 v-20 a5 5 0 0 1 4-5 z" />
-        <path d="M122 74 h-20 a2 2 0 0 0-2 2 v28 a4 4 0 0 0 5 4 l17-4 a5 5 0 0 0 4-5 v-20 a5 5 0 0 0-4-5 z" />
-      </>
-    ),
-  },
-  {
-    id: "biceps",
-    shapes: (
-      <>
-        <rect x="41" y="100" width="21" height="46" rx="10" />
-        <rect x="138" y="100" width="21" height="46" rx="10" />
-      </>
-    ),
-  },
-  {
-    id: "antebrazos",
-    shapes: (
-      <>
-        <rect x="33" y="148" width="19" height="52" rx="9" transform="rotate(-6 42 174)" />
-        <rect x="148" y="148" width="19" height="52" rx="9" transform="rotate(6 158 174)" />
-      </>
-    ),
-  },
-  {
-    id: "core",
-    shapes: (
-      <>
-        <rect x="84" y="112" width="32" height="56" rx="8" />
-        <path d="M78 116 l5 0 0 44 -8 -8 z" />
-        <path d="M122 116 l-5 0 0 44 8 -8 z" />
-      </>
-    ),
-  },
-  {
-    id: "cuadriceps",
-    shapes: (
-      <>
-        <path d="M76 190 c-8 0 -13 6 -13 16 l2 60 c0 12 4 18 11 18 8 0 12 -7 13 -18 l4 -60 c0 -10 -6 -16 -17 -16 z" />
-        <path d="M124 190 c8 0 13 6 13 16 l-2 60 c0 12 -4 18 -11 18 -8 0 -12 -7 -13 -18 l-4 -60 c0 -10 6 -16 17 -16 z" />
-      </>
-    ),
-  },
-  {
-    id: "gemelos",
-    shapes: (
-      <>
-        <rect x="68" y="300" width="22" height="62" rx="10" />
-        <rect x="110" y="300" width="22" height="62" rx="10" />
-      </>
-    ),
-  },
-];
-
-// ─── Vista trasera ────────────────────────────────────────────────────────
-
-const BACK: Region[] = [
-  {
-    id: "hombros",
-    shapes: (
-      <>
-        <ellipse cx="58" cy="86" rx="17" ry="15" />
-        <ellipse cx="142" cy="86" rx="17" ry="15" />
-      </>
-    ),
-  },
-  {
-    id: "espalda",
-    shapes: (
-      <>
-        {/* Trapecios */}
-        <path d="M80 70 h40 l6 22 -26 8 -26 -8 z" />
-        {/* Dorsales */}
-        <path d="M76 96 l24 8 24 -8 4 30 c0 14 -12 30 -28 34 -16 -4 -28 -20 -28 -34 z" />
-      </>
-    ),
-  },
-  {
-    id: "triceps",
-    shapes: (
-      <>
-        <rect x="41" y="100" width="21" height="46" rx="10" />
-        <rect x="138" y="100" width="21" height="46" rx="10" />
-      </>
-    ),
-  },
-  {
-    id: "antebrazos",
-    shapes: (
-      <>
-        <rect x="33" y="148" width="19" height="52" rx="9" transform="rotate(-6 42 174)" />
-        <rect x="148" y="148" width="19" height="52" rx="9" transform="rotate(6 158 174)" />
-      </>
-    ),
-  },
-  {
-    id: "gluteos",
-    shapes: (
-      <>
-        <path d="M99 176 v42 c-10 6 -22 4 -28 -4 -5 -8 -4 -24 4 -32 6 -6 16 -8 24 -6 z" />
-        <path d="M101 176 v42 c10 6 22 4 28 -4 5 -8 4 -24 -4 -32 -6 -6 -16 -8 -24 -6 z" />
-      </>
-    ),
-  },
-  {
-    id: "isquios",
-    shapes: (
-      <>
-        <path d="M76 222 c-9 0 -14 6 -14 16 l2 50 c0 12 5 18 12 18 8 0 12 -7 13 -18 l4 -50 c0 -10 -6 -16 -17 -16 z" />
-        <path d="M124 222 c9 0 14 6 14 16 l-2 50 c0 12 -5 18 -12 18 -8 0 -12 -7 -13 -18 l-4 -50 c0 -10 6 -16 17 -16 z" />
-      </>
-    ),
-  },
-  {
-    id: "gemelos",
-    shapes: (
-      <>
-        <path d="M79 306 c-11 0 -16 8 -15 20 l3 30 c1 10 5 14 12 14 7 0 11 -4 12 -14 l2 -30 c1 -12 -4 -20 -14 -20 z" />
-        <path d="M121 306 c11 0 16 8 15 20 l-3 30 c-1 10 -5 14 -12 14 -7 0 -11 -4 -12 -14 l-2 -30 c-1 -12 4 -20 14 -20 z" />
-      </>
-    ),
-  },
-  {
-    id: "core",
-    shapes: <rect x="82" y="140" width="36" height="34" rx="8" />,
-  },
-];
-
-/** Silueta base: se dibuja debajo de las zonas para dar contexto anatómico. */
-function Silhouette() {
-  return (
-    <g fill={S.base} stroke={S.line} strokeWidth="1.2">
-      <circle cx="100" cy="36" r="21" />
-      <rect x="91" y="54" width="18" height="14" rx="4" />
-      {/* Torso */}
-      <path d="M64 78 c8 -6 22 -10 36 -10 s28 4 36 10 l6 24 -4 40 c-1 14 -6 26 -8 38 l-30 6 -30 -6 c-2 -12 -7 -24 -8 -38 l-4 -40 z" />
-      {/* Brazos */}
-      <path d="M46 92 c-8 4 -11 12 -10 22 l8 76 c1 8 3 12 8 12 5 0 8 -5 7 -13 l-4 -74 4 -20 z" />
-      <path d="M154 92 c8 4 11 12 10 22 l-8 76 c-1 8 -3 12 -8 12 -5 0 -8 -5 -7 -13 l4 -74 -4 -20 z" />
-      {/* Manos */}
-      <ellipse cx="43" cy="204" rx="8" ry="11" />
-      <ellipse cx="157" cy="204" rx="8" ry="11" />
-      {/* Cadera + piernas */}
-      <path d="M70 172 h60 l6 26 -4 30 -6 76 -4 66 c-1 8 -5 12 -12 12 -7 0 -11 -5 -11 -13 l-2 -70 -1 -30 -1 30 -2 70 c0 8 -4 13 -11 13 -7 0 -11 -4 -12 -12 l-4 -66 -6 -76 -4 -30 z" />
-      {/* Pies */}
-      <path d="M68 384 h20 l2 12 h-24 z" />
-      <path d="M112 384 h20 l2 12 h-24 z" />
-    </g>
-  );
-}
 
 export interface BodyMapProps {
   /** Carga acumulada por zona. */
   load: Partial<Record<MuscleGroup, number>>;
-  /** Sesiones que tocaron cada zona, para el detalle al pulsar. */
+  /** Qué sesiones han cargado cada zona, para el detalle al pulsar. */
   detail?: Partial<Record<MuscleGroup, string[]>>;
   className?: string;
 }
@@ -209,12 +35,11 @@ export function BodyMap({ load, detail, className }: BodyMapProps) {
 
   const regions = view === "front" ? FRONT : BACK;
   const cardioLevel = loadLevel(load.cardio ?? 0);
-
   const selectedLevel = selected ? loadLevel(load[selected] ?? 0) : null;
 
   return (
     <div className={cn("flex flex-col items-center", className)}>
-      {/* Toggle frente / espalda */}
+      {/* Frente / espalda */}
       <div className="mb-2 flex w-full items-center justify-between">
         <div className="flex rounded-full border border-line p-0.5">
           {(["front", "back"] as const).map((v) => (
@@ -247,20 +72,22 @@ export function BodyMap({ load, detail, className }: BodyMapProps) {
 
       <motion.svg
         key={view}
-        initial={{ opacity: 0, rotateY: -18 }}
+        initial={{ opacity: 0, rotateY: -16 }}
         animate={{ opacity: 1, rotateY: 0 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        viewBox="0 0 200 410"
-        className="h-[340px] w-auto max-w-full select-none sm:h-[400px]"
+        viewBox={VIEWBOX}
+        className="h-[330px] w-auto max-w-full select-none sm:h-[390px]"
         role="img"
         aria-label={`Carga muscular, vista ${view === "front" ? "frontal" : "trasera"}`}
       >
-        <Silhouette />
+        <g fill="#17171c" stroke="#2c2c34" strokeWidth="1.1">
+          {SILHOUETTE.map((d, i) => (
+            <path key={i} d={d} />
+          ))}
+        </g>
 
         {regions.map((r) => {
-          const value = load[r.id] ?? 0;
-          const level = loadLevel(value);
-          const color = LOAD_COLOR[level];
+          const level = loadLevel(load[r.id] ?? 0);
           const isSelected = selected === r.id;
 
           return (
@@ -269,15 +96,20 @@ export function BodyMap({ load, detail, className }: BodyMapProps) {
               onClick={() => setSelected(isSelected ? null : r.id)}
               className="cursor-pointer"
               style={{
-                fill: color,
-                stroke: isSelected ? "#f6f4f0" : "transparent",
-                strokeWidth: 1.6,
-                opacity: level === 0 ? 0.85 : 1,
+                fill: LOAD_COLOR[level],
+                // El borde oscuro separa zonas contiguas del mismo color: sin
+                // él, pecho y abdomen en rojo se funden en una sola mancha.
+                stroke: isSelected ? "#f6f4f0" : "#101014",
+                strokeWidth: isSelected ? 2 : 1.6,
+                strokeLinejoin: "round",
+                opacity: level === 0 ? 0.9 : 1,
                 transition: "fill 0.45s cubic-bezier(0.16,1,0.3,1), stroke 0.15s",
               }}
             >
               <title>{`${MUSCLE_LABEL[r.id]} — ${LOAD_LABEL[level]}`}</title>
-              {r.shapes}
+              {r.d.map((d, i) => (
+                <path key={i} d={d} />
+              ))}
             </g>
           );
         })}

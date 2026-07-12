@@ -1,0 +1,79 @@
+rules_version = '2';
+
+// Reglas de Firestore para Método Híbrido.
+//
+// Modelo de roles: users/{uid}.role ∈ { athlete | coach | admin }.
+// El rol vive en el servidor: un atleta NO puede escribir su propio `role`,
+// así que no puede autoascenderse editando el documento desde el navegador.
+//
+// Para desplegarlas:  firebase deploy --only firestore:rules
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function roleOf(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data.role;
+    }
+
+    function isCoach() {
+      return signedIn() && roleOf(request.auth.uid) in ['coach', 'admin'];
+    }
+
+    function isAdmin() {
+      return signedIn() && roleOf(request.auth.uid) == 'admin';
+    }
+
+    // ── Perfiles ──────────────────────────────────────────────────────────
+    match /users/{uid} {
+      // El atleta se ve a sí mismo; el coach ve a todos (panel de atletas).
+      allow read: if signedIn() && (request.auth.uid == uid || isCoach());
+
+      // Alta: solo tu propio documento y siempre como atleta.
+      allow create: if signedIn()
+                    && request.auth.uid == uid
+                    && request.resource.data.role == 'athlete';
+
+      // Edición: puedes tocar tu perfil, pero NO tu rol.
+      allow update: if signedIn()
+                    && request.auth.uid == uid
+                    && request.resource.data.role == resource.data.role;
+
+      // Cambiar roles es cosa del admin.
+      allow update: if isAdmin();
+
+      allow delete: if isAdmin();
+
+      // Subcolecciones privadas del atleta (sesiones, cargas, skills).
+      match /{sub=**} {
+        allow read, write: if signedIn() && request.auth.uid == uid;
+        allow read: if isCoach();
+      }
+    }
+
+    // ── Entrenamientos ────────────────────────────────────────────────────
+    match /wods/{wodId} {
+      allow read: if signedIn();
+
+      // El coach publica el plan. El atleta solo puede crear/borrar los WODs
+      // que ha generado la IA para sí mismo (source == 'ai' y ownerId propio).
+      allow create: if isCoach()
+                    || (signedIn()
+                        && request.resource.data.source == 'ai'
+                        && request.resource.data.ownerId == request.auth.uid);
+
+      allow update, delete: if isCoach()
+                            || (signedIn()
+                                && resource.data.ownerId == request.auth.uid);
+    }
+
+    // ── Competiciones ─────────────────────────────────────────────────────
+    match /competiciones/{compId} {
+      allow read: if signedIn();
+      allow write: if isCoach();
+    }
+  }
+}

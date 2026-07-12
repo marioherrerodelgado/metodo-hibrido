@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────
+   MÉTODO HÍBRIDO — Design tokens
+   Dark-first. Monocromo + acción blanca (Nike / Apple).
+   El color solo aparece como DATO: deporte, intensidad, carga.
+   ───────────────────────────────────────────────────────────── */
+
+@theme {
+  --color-bg: #08080a;
+  --color-bg-elev: #101013;
+  --color-surface: #16161a;
+  --color-surface-2: #1e1e23;
+  --color-line: #2a2a31;
+  --color-line-soft: #1f1f25;
+
+  --color-ink: #f6f4f0;
+  --color-ink-2: #a1a1aa;
+  --color-ink-3: #6b6b74;
+
+  --color-accent: #ff4d17;
+
+  /* Deportes */
+  --color-running: #4ade80;
+  --color-hyrox: #a78bfa;
+  --color-deka: #fbbf24;
+  --color-crossfit: #fb7185;
+  --color-fuerza: #60a5fa;
+  --color-movilidad: #22d3ee;
+
+  /* Carga muscular (heatmap) */
+  --color-load-0: #23232a;
+  --color-load-1: #3b82f6;
+  --color-load-2: #f5c518;
+  --color-load-3: #ef4444;
+
+  --font-display: var(--font-anton), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jb), ui-monospace, monospace;
+
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  color-scheme: dark;
+  background: var(--color-bg);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior-y: none;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+/* Tipografía display: condensada y pesada */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Scrollbars discretas */
+.no-sb {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-sb::-webkit-scrollbar {
+  display: none;
+}
+
+/* Safe areas iOS */
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom), 0px);
+}
+.pt-safe {
+  padding-top: max(env(safe-area-inset-top), 0px);
+}
+
+/* Inputs nativos en dark */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.75);
+  cursor: pointer;
+}
+input,
+textarea,
+select,
+button {
+  font: inherit;
+  color: inherit;
+}
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+select option {
+  background: #16161a;
+  color: #f6f4f0;
+}
+
+/* Superficies */
+@utility card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line-soft);
+  border-radius: var(--radius-md);
+}
+
+@utility glass {
+  background: color-mix(in srgb, #08080a 72%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* Animaciones */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: spin-slow 1s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

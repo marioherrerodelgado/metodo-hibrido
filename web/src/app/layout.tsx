@@ -27,6 +27,11 @@ export const metadata: Metadata = {
   description:
     "Entrenamiento híbrido: running, CrossFit, Hyrox y DEKA en un único plan. Calendario, cargas, skills y carga muscular semanal.",
   applicationName: "Método Híbrido",
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [{ url: "/icon-192.png", sizes: "192x192", type: "image/png" }],
+    apple: "/apple-icon.png",
+  },
   appleWebApp: {
     capable: true,
     title: "Método Híbrido",

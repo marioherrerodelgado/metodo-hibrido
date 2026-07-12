@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "render:body": "tsx scripts/render-body.ts body.png"
+    "render:body": "tsx scripts/render-body.ts body.png",
+    "gen:icons": "tsx scripts/gen-icons.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.111.0",

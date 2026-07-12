@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, ShieldAlert, Trash2 } from "lucide-react";
 import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import { CsvImport } from "@/components/CsvImport";
 import {
   Button,
   EmptyState,
@@ -185,6 +186,8 @@ function WodsTab() {
 
   return (
     <div className="space-y-7">
+      <CsvImport onDone={reload} />
+
       <div className="rounded-[var(--radius-md)] border border-line-soft bg-surface p-4">
         <SectionTitle>Nuevo entrenamiento</SectionTitle>
 

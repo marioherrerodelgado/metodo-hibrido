@@ -160,7 +160,14 @@ export async function POST(req: Request) {
       );
     }
 
-    return NextResponse.json({ wod: JSON.parse(text) });
+    const wod = JSON.parse(text);
+
+    // La disciplina que ha elegido el atleta manda sobre la que deduzca el
+    // modelo: con ella filtra su calendario, y no puede pedir CrossFit y que
+    // el entreno le aparezca archivado como fuerza.
+    if (body.sport) wod.sport = body.sport;
+
+    return NextResponse.json({ wod });
   } catch (e) {
     if (e instanceof Anthropic.RateLimitError) {
       return NextResponse.json(

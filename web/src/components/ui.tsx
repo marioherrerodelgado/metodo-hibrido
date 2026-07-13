@@ -31,15 +31,19 @@ export function Button({
         "relative inline-flex items-center justify-center gap-2 rounded-full font-semibold",
         "transition-[transform,background-color,border-color,opacity] duration-150",
         "active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45",
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-3",
         size === "sm" && "h-9 px-4 text-[13px]",
         size === "md" && "h-11 px-5 text-[15px]",
         size === "lg" && "h-14 px-7 text-base",
-        variant === "primary" && "bg-ink text-bg hover:bg-white",
+        // El botón principal invierte el fondo de la app: negro sobre claro,
+        // blanco sobre oscuro. El hover baja la opacidad, no fuerza un color
+        // fijo (un `hover:bg-white` en tema claro lo dejaba invisible).
+        variant === "primary" && "bg-ink text-bg hover:opacity-90",
         variant === "secondary" &&
           "border border-line bg-surface text-ink hover:border-ink-3 hover:bg-surface-2",
         variant === "ghost" && "text-ink-2 hover:bg-surface hover:text-ink",
-        variant === "danger" && "bg-red-500/12 text-red-400 hover:bg-red-500/20",
+        variant === "danger" &&
+          "bg-red-500/12 text-red-600 hover:bg-red-500/20 dark:text-red-400",
         full && "w-full",
         className,
       )}
@@ -106,7 +110,7 @@ export function Pill({
       {...props}
       style={
         active && color
-          ? { backgroundColor: color, borderColor: color, color: "#08080a" }
+          ? { backgroundColor: color, borderColor: color, color: "var(--bg)" }
           : undefined
       }
       className={cn(

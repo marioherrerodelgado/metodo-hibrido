@@ -12,8 +12,8 @@ export default function manifest(): MetadataRoute.Manifest {
       "Running, CrossFit, Hyrox y DEKA en un único plan. Calendario, cargas, skills y carga muscular semanal.",
     start_url: "/hoy",
     display: "standalone",
-    background_color: "#08080a",
-    theme_color: "#08080a",
+    background_color: "#faf9f7",
+    theme_color: "#faf9f7",
     orientation: "portrait",
     lang: "es",
     icons: [

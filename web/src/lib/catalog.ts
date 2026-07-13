@@ -9,7 +9,7 @@ export interface MovementCategory {
 export const MOVEMENT_CATEGORIES: Record<string, MovementCategory> = {
   halterofilia: {
     label: "Halterofilia",
-    color: "#60a5fa",
+    color: "#3b82f6",
     movements: [
       "Snatch",
       "Power Snatch",
@@ -22,7 +22,7 @@ export const MOVEMENT_CATEGORIES: Record<string, MovementCategory> = {
   },
   fuerza: {
     label: "Fuerza",
-    color: "#f6f4f0",
+    color: "#64748b",
     movements: [
       "Back Squat",
       "Front Squat",
@@ -38,7 +38,7 @@ export const MOVEMENT_CATEGORIES: Record<string, MovementCategory> = {
   },
   metcon: {
     label: "CrossFit / Metcon",
-    color: "#fb7185",
+    color: "#f43f5e",
     movements: [
       "Thruster",
       "Wall Ball",

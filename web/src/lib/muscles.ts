@@ -192,11 +192,16 @@ export function loadLevel(value: number): 0 | 1 | 2 | 3 {
   return 3;
 }
 
+/**
+ * Variables CSS, no hex: el tono cambia con el tema (un amarillo que se lee
+ * sobre negro se pierde sobre blanco). Solo valen en estilos en línea, nunca
+ * como atributo SVG, donde el navegador no resuelve `var()`.
+ */
 export const LOAD_COLOR: Record<0 | 1 | 2 | 3, string> = {
-  0: "#23232a",
-  1: "#3b82f6",
-  2: "#f5c518",
-  3: "#ef4444",
+  0: "var(--load-0)",
+  1: "var(--load-1)",
+  2: "var(--load-2)",
+  3: "var(--load-3)",
 };
 
 export const LOAD_LABEL: Record<0 | 1 | 2 | 3, string> = {

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Anton, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
+import { THEME_SCRIPT, ThemeProvider } from "@/lib/theme";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -45,7 +46,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#08080a",
+  // El proveedor de tema lo reescribe en cliente según el tema activo.
+  themeColor: "#faf9f7",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -59,10 +61,19 @@ export default function RootLayout({
   return (
     <html
       lang="es"
+      data-theme="light"
+      suppressHydrationWarning
       className={`${inter.variable} ${anton.variable} ${jb.variable} h-full`}
     >
+      <head>
+        {/* Antes de pintar nada: si no, al cargar en oscuro se vería un
+            fogonazo blanco mientras React monta. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="min-h-full">
-        <AuthProvider>{children}</AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

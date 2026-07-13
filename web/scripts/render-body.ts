@@ -7,8 +7,17 @@
  */
 import sharp from "sharp";
 import { BACK, FRONT, SILHOUETTE, VIEWBOX } from "../src/lib/body-shapes";
-import { LOAD_COLOR } from "../src/lib/muscles";
 import type { MuscleGroup } from "../src/lib/types";
+
+// LOAD_COLOR son variables CSS (cambian con el tema) y aquí escribimos
+// atributos SVG, donde `var()` no se resuelve. Copia literal del tema oscuro
+// tal y como está en globals.css.
+const LOAD_COLOR: Record<0 | 1 | 2 | 3, string> = {
+  0: "#23232a",
+  1: "#3b82f6",
+  2: "#f5c518",
+  3: "#ef4444",
+};
 
 // Carga de ejemplo: una de cada nivel, para ver los cuatro colores a la vez.
 const DEMO: Partial<Record<MuscleGroup, 0 | 1 | 2 | 3>> = {

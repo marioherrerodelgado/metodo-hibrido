@@ -26,6 +26,7 @@ import { useAuth } from "@/lib/auth-context";
 import { ALL_MOVEMENTS, MOVEMENT_CATEGORIES, SKILLS, SKILL_TIER_LABEL, movementColor } from "@/lib/catalog";
 import { addLift, deleteLift, setSkills } from "@/lib/data";
 import { useLifts, useSkills, useWeeklyLoad } from "@/lib/hooks";
+import { useTheme } from "@/lib/theme";
 import { LOAD_COLOR, loadLevel } from "@/lib/muscles";
 import { MUSCLE_GROUPS, MUSCLE_LABEL } from "@/lib/types";
 import { cn, estimate1RM, todayISO } from "@/lib/utils";
@@ -143,8 +144,15 @@ function CargaTab() {
 
 // ─── Kilos / 1RM ──────────────────────────────────────────────────────────
 
+const CHART = {
+  light: { grid: "#e4e1db", tick: "#8b8b82", tip: "#ffffff", tipLine: "#dedad3", ref: "#a1a1a8" },
+  dark: { grid: "#23232a", tick: "#6b6b74", tip: "#101013", tipLine: "#2a2a31", ref: "#6b6b74" },
+} as const;
+
 function KilosTab() {
   const { user } = useAuth();
+  const { theme } = useTheme();
+  const c = CHART[theme];
   const lifts = useLifts();
   const [movement, setMovement] = useState("Back Squat");
   const [form, setForm] = useState({
@@ -288,15 +296,15 @@ function KilosTab() {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 6, right: 6, left: -18, bottom: 0 }}>
-                <CartesianGrid stroke="#23232a" vertical={false} />
+                <CartesianGrid stroke={c.grid} vertical={false} />
                 <XAxis
                   dataKey="date"
-                  tick={{ fill: "#6b6b74", fontSize: 11 }}
-                  axisLine={{ stroke: "#23232a" }}
+                  tick={{ fill: c.tick, fontSize: 11 }}
+                  axisLine={{ stroke: c.grid }}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fill: "#6b6b74", fontSize: 11 }}
+                  tick={{ fill: c.tick, fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                   width={44}
@@ -304,12 +312,12 @@ function KilosTab() {
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "#101013",
-                    border: "1px solid #2a2a31",
+                    background: c.tip,
+                    border: `1px solid ${c.tipLine}`,
                     borderRadius: 10,
                     fontSize: 12,
                   }}
-                  labelStyle={{ color: "#6b6b74" }}
+                  labelStyle={{ color: c.tick }}
                 />
                 <Line
                   type="monotone"
@@ -323,7 +331,7 @@ function KilosTab() {
                   type="monotone"
                   dataKey="e1rm"
                   name="1RM estimado"
-                  stroke="#6b6b74"
+                  stroke={c.ref}
                   strokeWidth={1.4}
                   strokeDasharray="4 3"
                   dot={false}

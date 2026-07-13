@@ -1,38 +1,109 @@
 @import "tailwindcss";
 
+/* El tema lo marca un atributo en <html>, no la preferencia del sistema:
+   el usuario puede forzar claro u oscuro. Sin esto, `dark:` en Tailwind
+   miraría a prefers-color-scheme y se desincronizaría del interruptor. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* ─────────────────────────────────────────────────────────────
    MÉTODO HÍBRIDO — Design tokens
-   Dark-first. Monocromo + acción blanca (Nike / Apple).
-   El color solo aparece como DATO: deporte, intensidad, carga.
+   Claro por defecto, oscuro bajo demanda. Monocromo + acción
+   negra/blanca; el color solo aparece como DATO: deporte,
+   intensidad, carga muscular.
    ───────────────────────────────────────────────────────────── */
 
-@theme {
-  --color-bg: #08080a;
-  --color-bg-elev: #101013;
-  --color-surface: #16161a;
-  --color-surface-2: #1e1e23;
-  --color-line: #2a2a31;
-  --color-line-soft: #1f1f25;
+/* Tema claro (por defecto) */
+:root {
+  --bg: #faf9f7;
+  --bg-elev: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f0eeea;
+  --line: #dedad3;
+  --line-soft: #e9e6e0;
 
-  --color-ink: #f6f4f0;
-  --color-ink-2: #a1a1aa;
-  --color-ink-3: #6b6b74;
+  --ink: #14140f;
+  --ink-2: #56564e;
+  --ink-3: #8b8b82;
+
+  /* Superficies auxiliares que no son tokens de Tailwind */
+  --body-base: #eceae5; /* relleno de la silueta del mapa corporal */
+  --body-line: #d6d2ca;
+  --body-gap: #ffffff; /* borde que separa zonas del mismo color */
+  --track: #e6e3dd; /* barras de progreso, anillo del timer */
+  --overlay: rgba(20, 20, 15, 0.35);
+  --load-0: #dcd8d1; /* zona muscular sin trabajar */
+  --load-1: #2563eb;
+  --load-2: #d97706;
+  --load-3: #dc2626;
+
+  /* Color como DATO. En claro hacen falta tonos más profundos para que se
+     lean sobre blanco; en oscuro, más vivos. */
+  --sport-running: #15803d;
+  --sport-crossfit: #be123c;
+  --sport-hyrox: #6d28d9;
+  --sport-deka: #b45309;
+  --sport-fuerza: #1d4ed8;
+  --sport-movilidad: #0e7490;
+
+  --int-baja: #15803d;
+  --int-media: #1d4ed8;
+  --int-alta: #b45309;
+  --int-maxima: #dc2626;
+
+  color-scheme: light;
+}
+
+/* Tema oscuro */
+[data-theme="dark"] {
+  --bg: #08080a;
+  --bg-elev: #101013;
+  --surface: #16161a;
+  --surface-2: #1e1e23;
+  --line: #2a2a31;
+  --line-soft: #1f1f25;
+
+  --ink: #f6f4f0;
+  --ink-2: #a1a1aa;
+  --ink-3: #6b6b74;
+
+  --body-base: #17171c;
+  --body-line: #2c2c34;
+  --body-gap: #101014;
+  --track: #23232a;
+  --overlay: rgba(0, 0, 0, 0.65);
+  --load-0: #23232a;
+  --load-1: #3b82f6;
+  --load-2: #f5c518;
+  --load-3: #ef4444;
+
+  --sport-running: #4ade80;
+  --sport-crossfit: #fb7185;
+  --sport-hyrox: #a78bfa;
+  --sport-deka: #fbbf24;
+  --sport-fuerza: #60a5fa;
+  --sport-movilidad: #22d3ee;
+
+  --int-baja: #4ade80;
+  --int-media: #60a5fa;
+  --int-alta: #fbbf24;
+  --int-maxima: #ef4444;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elev: var(--bg-elev);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
 
   --color-accent: #ff4d17;
-
-  /* Deportes */
-  --color-running: #4ade80;
-  --color-hyrox: #a78bfa;
-  --color-deka: #fbbf24;
-  --color-crossfit: #fb7185;
-  --color-fuerza: #60a5fa;
-  --color-movilidad: #22d3ee;
-
-  /* Carga muscular (heatmap) */
-  --color-load-0: #23232a;
-  --color-load-1: #3b82f6;
-  --color-load-2: #f5c518;
-  --color-load-3: #ef4444;
 
   --font-display: var(--font-anton), "Arial Narrow", sans-serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
@@ -50,13 +121,12 @@
 }
 
 html {
-  color-scheme: dark;
-  background: var(--color-bg);
+  background: var(--bg);
 }
 
 body {
-  background: var(--color-bg);
-  color: var(--color-ink);
+  background: var(--bg);
+  color: var(--ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -103,43 +173,51 @@ body {
   padding-top: max(env(safe-area-inset-top), 0px);
 }
 
-/* Inputs nativos en dark */
+/* Inputs nativos */
+[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.75);
+}
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.75);
   cursor: pointer;
 }
-input,
-textarea,
-select,
-button {
-  font: inherit;
-  color: inherit;
-}
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-}
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-select option {
-  background: #16161a;
-  color: #f6f4f0;
+/* Estos resets van DENTRO de @layer base a propósito. El CSS sin capa gana
+   siempre al CSS con capa, así que un `color: inherit` suelto aquí pisaba a
+   las utilidades de Tailwind: el texto del botón principal heredaba el color
+   del fondo y se volvía invisible. */
+@layer base {
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+  }
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  select option {
+    background: var(--surface);
+    color: var(--ink);
+  }
 }
 
 /* Superficies */
 @utility card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-line-soft);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
   border-radius: var(--radius-md);
 }
 
 @utility glass {
-  background: color-mix(in srgb, #08080a 72%, transparent);
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
 }
@@ -167,7 +245,7 @@ select option {
 .skeleton {
   position: relative;
   overflow: hidden;
-  background: var(--color-surface);
+  background: var(--surface-2);
 }
 .skeleton::after {
   content: "";
@@ -177,7 +255,7 @@ select option {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.05),
+    color-mix(in srgb, var(--ink) 6%, transparent),
     transparent
   );
   animation: shimmer 1.6s infinite;

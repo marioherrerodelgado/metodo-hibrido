@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "render:body": "tsx scripts/render-body.ts body.png",
-    "gen:icons": "tsx scripts/gen-icons.ts"
+    "gen:icons": "tsx scripts/gen-icons.ts",
+    "shots": "tsx scripts/shots.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.111.0",
@@ -30,6 +31,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
+    "playwright": "^1.61.1",
     "sharp": "^0.35.3",
     "tailwindcss": "^4",
     "tsx": "^4.23.0",

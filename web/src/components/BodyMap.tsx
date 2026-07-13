@@ -80,7 +80,10 @@ export function BodyMap({ load, detail, className }: BodyMapProps) {
         role="img"
         aria-label={`Carga muscular, vista ${view === "front" ? "frontal" : "trasera"}`}
       >
-        <g fill="#17171c" stroke="#2c2c34" strokeWidth="1.1">
+        <g
+          style={{ fill: "var(--body-base)", stroke: "var(--body-line)" }}
+          strokeWidth="1.1"
+        >
           {SILHOUETTE.map((d, i) => (
             <path key={i} d={d} />
           ))}
@@ -97,9 +100,9 @@ export function BodyMap({ load, detail, className }: BodyMapProps) {
               className="cursor-pointer"
               style={{
                 fill: LOAD_COLOR[level],
-                // El borde oscuro separa zonas contiguas del mismo color: sin
-                // él, pecho y abdomen en rojo se funden en una sola mancha.
-                stroke: isSelected ? "#f6f4f0" : "#101014",
+                // El borde separa zonas contiguas del mismo color: sin él,
+                // pecho y abdomen en rojo se funden en una sola mancha.
+                stroke: isSelected ? "var(--ink)" : "var(--body-gap)",
                 strokeWidth: isSelected ? 2 : 1.6,
                 strokeLinejoin: "round",
                 opacity: level === 0 ? 0.9 : 1,
@@ -160,10 +163,14 @@ export function BodyMap({ load, detail, className }: BodyMapProps) {
       {/* Cardio + leyenda */}
       <div className="mt-3 flex w-full flex-col gap-3">
         <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-line-soft bg-bg-elev p-3">
+          {/* El relleno va por `style` y no por el atributo `fill`, porque el
+              navegador no resuelve `var()` en atributos SVG. */}
           <Heart
             size={18}
-            style={{ color: LOAD_COLOR[cardioLevel] }}
-            fill={cardioLevel > 0 ? LOAD_COLOR[cardioLevel] : "none"}
+            style={{
+              color: LOAD_COLOR[cardioLevel],
+              fill: cardioLevel > 0 ? LOAD_COLOR[cardioLevel] : "none",
+            }}
           />
           <div className="flex-1">
             <div className="text-[13px] font-semibold">Sistema cardiovascular</div>
@@ -175,7 +182,8 @@ export function BodyMap({ load, detail, className }: BodyMapProps) {
                 key={n}
                 className="h-5 w-1.5 rounded-full transition-colors"
                 style={{
-                  background: cardioLevel >= n ? LOAD_COLOR[cardioLevel] : "#23232a",
+                  background:
+                    cardioLevel >= n ? LOAD_COLOR[cardioLevel] : "var(--track)",
                 }}
               />
             ))}

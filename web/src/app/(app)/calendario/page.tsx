@@ -181,7 +181,7 @@ export default function CalendarioPage() {
                           key={w.id}
                           className="h-1 w-1 rounded-full"
                           style={{
-                            background: isToday ? "#08080a" : SPORT_COLOR[w.sport],
+                            background: isToday ? "var(--bg)" : SPORT_COLOR[w.sport],
                           }}
                         />
                       ))}

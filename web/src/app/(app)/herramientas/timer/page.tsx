@@ -48,11 +48,11 @@ const DEFAULTS: Config = {
 type Phase = "idle" | "prep" | "work" | "rest" | "done";
 
 const COLOR: Record<Phase, string> = {
-  idle: "#6b6b74",
-  prep: "#fbbf24",
-  work: "#4ade80",
-  rest: "#3b82f6",
-  done: "#ff4d17",
+  idle: "var(--ink-3)",
+  prep: "var(--int-alta)",
+  work: "var(--int-baja)",
+  rest: "var(--int-media)",
+  done: "var(--color-accent)",
 };
 
 export default function TimerPage() {
@@ -245,18 +245,29 @@ export default function TimerPage() {
       <div className="mt-6 flex flex-col items-center px-5">
         <div className="relative flex h-[300px] w-[300px] items-center justify-center">
           <svg viewBox="0 0 200 200" className="absolute inset-0 -rotate-90">
-            <circle cx="100" cy="100" r="92" fill="none" stroke="#1e1e23" strokeWidth="7" />
             <circle
               cx="100"
               cy="100"
               r="92"
               fill="none"
-              stroke={color}
+              style={{ stroke: "var(--track)" }}
+              strokeWidth="7"
+            />
+            {/* El color va por `style` y no por el atributo `stroke`: son
+                variables CSS y el navegador no resuelve `var()` en atributos. */}
+            <circle
+              cx="100"
+              cy="100"
+              r="92"
+              fill="none"
               strokeWidth="7"
               strokeLinecap="round"
               strokeDasharray={2 * Math.PI * 92}
               strokeDashoffset={2 * Math.PI * 92 * (1 - progress)}
-              style={{ transition: "stroke-dashoffset 0.95s linear, stroke 0.3s" }}
+              style={{
+                stroke: color,
+                transition: "stroke-dashoffset 0.95s linear, stroke 0.3s",
+              }}
             />
           </svg>
 

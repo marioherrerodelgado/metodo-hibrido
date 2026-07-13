@@ -8,9 +8,12 @@ import {
   Footprints,
   LogOut,
   MapPin,
+  Monitor,
+  Moon,
   Music,
   Settings2,
   Shield,
+  Sun,
   Target,
   Timer,
   MessageCircle,
@@ -20,7 +23,9 @@ import { Button, PageFade, Pill, SectionTitle } from "@/components/ui";
 import { useAuth } from "@/lib/auth-context";
 import { useSkills, useWeeklyLoad } from "@/lib/hooks";
 import { SKILLS } from "@/lib/catalog";
+import { useTheme } from "@/lib/theme";
 import { SPORTS, SPORT_COLOR, SPORT_LABEL, type Sport } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 const WHATSAPP = "https://chat.whatsapp.com/HTZqzHGVAMHCVeofrejg3f?mode=gi_t";
 const SPOTIFY =
@@ -31,6 +36,7 @@ export default function PerfilPage() {
   const router = useRouter();
   const skills = useSkills();
   const { sessions } = useWeeklyLoad();
+  const { pref, setPref } = useTheme();
 
   const [goalsOpen, setGoalsOpen] = useState(false);
   const [goals, setGoals] = useState<(Sport | "all")[]>(profile?.goals ?? ["all"]);
@@ -114,6 +120,33 @@ export default function PerfilPage() {
           hint="Nivel, material, zonas a cuidar"
           href="/onboarding"
         />
+      </section>
+
+      {/* Apariencia */}
+      <section className="mt-7 px-5">
+        <SectionTitle>Apariencia</SectionTitle>
+        <div className="flex gap-1.5 rounded-[var(--radius-md)] border border-line-soft bg-surface p-1.5">
+          {(
+            [
+              ["light", "Claro", Sun],
+              ["dark", "Oscuro", Moon],
+              ["system", "Sistema", Monitor],
+            ] as const
+          ).map(([p, label, Icon]) => (
+            <button
+              key={p}
+              onClick={() => setPref(p)}
+              aria-pressed={pref === p}
+              className={cn(
+                "flex flex-1 items-center justify-center gap-1.5 rounded-[10px] py-2.5 text-[13px] font-semibold transition-colors",
+                pref === p ? "bg-ink text-bg" : "text-ink-3 hover:text-ink",
+              )}
+            >
+              <Icon size={15} />
+              {label}
+            </button>
+          ))}
+        </div>
       </section>
 
       {/* Herramientas */}

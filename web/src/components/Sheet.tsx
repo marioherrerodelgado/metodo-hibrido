@@ -46,7 +46,8 @@ export function Sheet({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 z-40 bg-black/65 backdrop-blur-[2px]"
+            style={{ background: "var(--overlay)" }}
+            className="fixed inset-0 z-40 backdrop-blur-[2px]"
           />
 
           <motion.div
@@ -125,7 +126,8 @@ export function Modal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/70 backdrop-blur-[2px]"
+            style={{ background: "var(--overlay)" }}
+            className="absolute inset-0 backdrop-blur-[2px]"
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.94, y: 12 }}

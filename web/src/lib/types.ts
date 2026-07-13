@@ -22,14 +22,21 @@ export const SPORT_LABEL: Record<Sport, string> = {
   movilidad: "Movilidad",
 };
 
-/** Color de dato por deporte. Coincide con los tokens de globals.css. */
+/**
+ * Color de dato por deporte. Son variables CSS, no hex, porque el tono tiene
+ * que cambiar con el tema: un verde que se lee sobre negro se pierde sobre
+ * blanco. Los valores viven en globals.css.
+ *
+ * Solo valen en estilos en línea (`style={{ color: ... }}`), nunca como
+ * atributo SVG (`fill="..."`), donde el navegador no resuelve `var()`.
+ */
 export const SPORT_COLOR: Record<Sport, string> = {
-  running: "#4ade80",
-  crossfit: "#fb7185",
-  hyrox: "#a78bfa",
-  deka: "#fbbf24",
-  fuerza: "#60a5fa",
-  movilidad: "#22d3ee",
+  running: "var(--sport-running)",
+  crossfit: "var(--sport-crossfit)",
+  hyrox: "var(--sport-hyrox)",
+  deka: "var(--sport-deka)",
+  fuerza: "var(--sport-fuerza)",
+  movilidad: "var(--sport-movilidad)",
 };
 
 export type Intensity = "baja" | "media" | "alta" | "maxima";
@@ -42,10 +49,10 @@ export const INTENSITY_LABEL: Record<Intensity, string> = {
 };
 
 export const INTENSITY_COLOR: Record<Intensity, string> = {
-  baja: "#4ade80",
-  media: "#60a5fa",
-  alta: "#fbbf24",
-  maxima: "#ef4444",
+  baja: "var(--int-baja)",
+  media: "var(--int-media)",
+  alta: "var(--int-alta)",
+  maxima: "var(--int-maxima)",
 };
 
 /** Valor numérico usado para ponderar la carga muscular semanal. */

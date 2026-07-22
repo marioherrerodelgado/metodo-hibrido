@@ -24,10 +24,10 @@ const jb = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Método Híbrido",
+  title: "Nemea · Entrenamiento híbrido",
   description:
-    "Entrenamiento híbrido: running, CrossFit, Hyrox y DEKA en un único plan. Calendario, cargas, skills y carga muscular semanal.",
-  applicationName: "Método Híbrido",
+    "Nemea: running, CrossFit, Hyrox y DEKA en un único plan. Calendario, cargas, skills y carga muscular semanal.",
+  applicationName: "Nemea",
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [{ url: "/icon-192.png", sizes: "192x192", type: "image/png" }],
@@ -35,11 +35,11 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    title: "Método Híbrido",
+    title: "Nemea",
     statusBarStyle: "black-translucent",
   },
   openGraph: {
-    title: "Método Híbrido",
+    title: "Nemea",
     description: "Un método. Cuatro disciplinas. Un solo plan.",
     type: "website",
   },

@@ -21,9 +21,9 @@ const icon = (size: number, rounded: boolean) => `
   <rect width="512" height="512" rx="${rounded ? 112 : 0}" fill="url(#g)"/>
   <rect x="0" y="436" width="512" height="76" fill="#ff4d17" opacity="${rounded ? 0 : 0}"/>
   <g fill="#f6f4f0" font-family="Arial Narrow, Arial, sans-serif" font-weight="700" text-anchor="middle">
-    <text x="256" y="300" font-size="230" letter-spacing="-6">MH</text>
+    <text x="256" y="312" font-size="300" letter-spacing="-6">N</text>
   </g>
-  <rect x="150" y="336" width="212" height="14" rx="7" fill="#ff4d17"/>
+  <rect x="176" y="348" width="160" height="16" rx="8" fill="#ff4d17"/>
 </svg>`;
 
 const targets: [string, number, boolean][] = [

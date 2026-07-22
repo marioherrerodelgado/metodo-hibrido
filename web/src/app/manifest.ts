@@ -6,8 +6,8 @@ import type { MetadataRoute } from "next";
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Método Híbrido",
-    short_name: "Híbrido",
+    name: "Nemea",
+    short_name: "Nemea",
     description:
       "Running, CrossFit, Hyrox y DEKA en un único plan. Calendario, cargas, skills y carga muscular semanal.",
     start_url: "/hoy",

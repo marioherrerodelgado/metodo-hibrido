@@ -6,7 +6,7 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /* ─────────────────────────────────────────────────────────────
-   MÉTODO HÍBRIDO — Design tokens
+   NEMEA — Design tokens
    Claro por defecto, oscuro bajo demanda. Monocromo + acción
    negra/blanca; el color solo aparece como DATO: deporte,
    intensidad, carga muscular.

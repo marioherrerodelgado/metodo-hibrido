@@ -60,9 +60,7 @@ export default function LandingPage() {
       />
 
       <nav className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 pt-[max(20px,env(safe-area-inset-top))]">
-        <span className="mono text-[12px] font-bold tracking-[0.2em] uppercase">
-          Método Híbrido
-        </span>
+        <span className="display text-[22px] tracking-[0.04em]">Nemea</span>
         <Link
           href="/login"
           className="text-[14px] font-semibold text-ink-2 transition-colors hover:text-ink"
@@ -169,7 +167,7 @@ export default function LandingPage() {
 
       <footer className="border-t border-line-soft px-6 py-8 pb-[max(32px,env(safe-area-inset-bottom))]">
         <p className="mono text-center text-[10px] tracking-widest text-ink-3 uppercase">
-          Método Híbrido · Madrid
+          Nemea · Madrid
         </p>
       </footer>
     </div>

@@ -102,7 +102,7 @@ export function InstallPrompt() {
     <Sheet open={open} onClose={close}>
       <div className="flex flex-col items-center pb-4 text-center">
         <div className="overflow-hidden rounded-[22px] border border-line-soft shadow-lg">
-          <Image src="/icon-192.png" alt="Método Híbrido" width={84} height={84} priority />
+          <Image src="/icon-192.png" alt="Nemea" width={84} height={84} priority />
         </div>
 
         <h2 className="display mt-4 text-[30px]">Instala la app</h2>

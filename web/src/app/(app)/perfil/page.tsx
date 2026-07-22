@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ChevronRight,
+  Eye,
   Footprints,
   LogOut,
   MapPin,
@@ -32,7 +33,15 @@ const SPOTIFY =
   "https://open.spotify.com/playlist/2PwTV4QsIUbGI1lYN3a3jX?si=7f026bba371d46b7";
 
 export default function PerfilPage() {
-  const { user, profile, isCoach, logout, updateProfileDoc } = useAuth();
+  const {
+    user,
+    profile,
+    realIsCoach,
+    viewAsAthlete,
+    setViewAsAthlete,
+    logout,
+    updateProfileDoc,
+  } = useAuth();
   const router = useRouter();
   const skills = useSkills();
   const { sessions } = useWeeklyLoad();
@@ -191,15 +200,46 @@ export default function PerfilPage() {
       </section>
 
       {/* Coach / admin */}
-      {isCoach && (
+      {realIsCoach && (
         <section className="mt-7 px-5">
           <SectionTitle>Gestión</SectionTitle>
           <Row
             icon={<Shield size={17} />}
             title="Panel del coach"
-            hint="Subir entrenamientos y ver atletas"
+            hint="Clientes, avisos, entrenos y equipo"
             href="/admin"
           />
+          {/* Ver la app como la ve un atleta, sin cambiar tu rol real. */}
+          <button
+            onClick={() => {
+              setViewAsAthlete(!viewAsAthlete);
+              if (!viewAsAthlete) router.push("/hoy");
+            }}
+            className="mb-2 flex w-full items-center gap-3 rounded-[var(--radius-md)] border border-line-soft bg-surface px-4 py-3 text-left transition-colors hover:border-line"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-surface-2 text-ink-2">
+              <Eye size={17} />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[15px] font-medium">Ver como atleta</span>
+              <span className="block text-[12px] text-ink-3">
+                Previsualiza la app sin cambiar tu rol
+              </span>
+            </span>
+            <span
+              className={cn(
+                "relative h-6 w-10 shrink-0 rounded-full transition-colors",
+                viewAsAthlete ? "bg-accent" : "bg-surface-2",
+              )}
+            >
+              <span
+                className={cn(
+                  "absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform",
+                  viewAsAthlete ? "translate-x-[18px]" : "translate-x-0.5",
+                )}
+              />
+            </span>
+          </button>
         </section>
       )}
 

@@ -69,6 +69,15 @@ export default function RootLayout({
         {/* Antes de pintar nada: si no, al cargar en oscuro se vería un
             fogonazo blanco mientras React monta. */}
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        {/* Chrome/Android lanza `beforeinstallprompt` al cargar, a veces antes
+            de que React monte. Lo guardamos en window para no perderlo y poder
+            ofrecer la instalación después. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__mhInstall=e;});",
+          }}
+        />
       </head>
       <body className="min-h-full">
         <ThemeProvider>

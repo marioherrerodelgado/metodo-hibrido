@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "./auth-context";
 import {
+  watchActiveAnnouncements,
+  watchCoachTasks,
   watchCompetitions,
   watchLifts,
   watchMonthWods,
@@ -12,6 +14,8 @@ import {
 import { COMPETITIONS_SEED } from "./competitions-seed";
 import { accumulateLoad } from "./muscles";
 import type {
+  Announcement,
+  CoachTask,
   Competition,
   LiftEntry,
   MuscleGroup,
@@ -27,6 +31,8 @@ const NO_SESSIONS: SessionLog[] = [];
 const NO_LIFTS: LiftEntry[] = [];
 const NO_SKILLS: SkillDates = {};
 const NO_WODS: Wod[] = [];
+const NO_ANNOUNCEMENTS: Announcement[] = [];
+const NO_TASKS: CoachTask[] = [];
 
 /**
  * Los hooks de abajo nunca llaman a setState en el cuerpo del efecto: solo
@@ -141,6 +147,26 @@ export function useSkills(): SkillDates {
   }, [user]);
 
   return user && state?.uid === user.uid ? state.map : NO_SKILLS;
+}
+
+/** Avisos activos del coach, para el banner de la app. */
+export function useActiveAnnouncements(): Announcement[] {
+  const [list, setList] = useState<Announcement[]>(NO_ANNOUNCEMENTS);
+  useEffect(() => watchActiveAnnouncements(setList), []);
+  return list;
+}
+
+/** Tareas del coach (privadas de su usuario). */
+export function useCoachTasks(): CoachTask[] {
+  const { user } = useAuth();
+  const [state, setState] = useState<{ uid: string; list: CoachTask[] } | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    return watchCoachTasks(user.uid, (list) => setState({ uid: user.uid, list }));
+  }, [user]);
+
+  return user && state?.uid === user.uid ? state.list : NO_TASKS;
 }
 
 export const thisMonth = () => monthKey(new Date());

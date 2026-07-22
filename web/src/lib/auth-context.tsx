@@ -27,8 +27,14 @@ interface AuthValue {
   user: User | null;
   profile: UserProfile | null;
   loading: boolean;
+  /** Rol EFECTIVO: baja a atleta si el coach está en modo "ver como atleta". */
   isAdmin: boolean;
   isCoach: boolean;
+  /** Rol REAL en la base de datos, para decidir si ofrecer la vista previa. */
+  realIsCoach: boolean;
+  /** El coach está previsualizando la app como un atleta. */
+  viewAsAthlete: boolean;
+  setViewAsAthlete: (v: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
@@ -38,6 +44,17 @@ interface AuthValue {
 }
 
 const AuthContext = createContext<AuthValue | null>(null);
+
+const VIEW_AS_KEY = "mh-view-as-athlete";
+
+function readViewAs(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return localStorage.getItem(VIEW_AS_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
 
 /** Crea el documento users/{uid} si no existe. Nunca pisa el `role` existente. */
 async function ensureProfile(user: User, name?: string) {
@@ -152,13 +169,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [user],
   );
 
+  // Vista previa "ver como atleta": solo cambia lo que muestra la UI, nunca el
+  // rol real en la base de datos, así que no hay riesgo de quedarse fuera.
+  // Inicialización perezosa desde localStorage (sin efecto que dispare render).
+  const [viewAsAthlete, setViewAsAthleteState] = useState<boolean>(readViewAs);
+
+  const setViewAsAthlete = useCallback((v: boolean) => {
+    setViewAsAthleteState(v);
+    try {
+      if (v) localStorage.setItem(VIEW_AS_KEY, "1");
+      else localStorage.removeItem(VIEW_AS_KEY);
+    } catch {
+      /* Sin almacenamiento: la vista no persiste entre recargas; no es grave. */
+    }
+  }, []);
+
+  const realIsCoach = profile?.role === "coach" || profile?.role === "admin";
+
   const value = useMemo<AuthValue>(
     () => ({
       user,
       profile,
       loading,
-      isAdmin: profile?.role === "admin",
-      isCoach: profile?.role === "coach" || profile?.role === "admin",
+      // Rol efectivo: si el coach está en vista de atleta, se comporta como uno.
+      isAdmin: profile?.role === "admin" && !viewAsAthlete,
+      isCoach: realIsCoach && !viewAsAthlete,
+      realIsCoach,
+      viewAsAthlete,
+      setViewAsAthlete,
       login,
       register,
       loginWithGoogle,
@@ -170,6 +208,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user,
       profile,
       loading,
+      realIsCoach,
+      viewAsAthlete,
+      setViewAsAthlete,
       login,
       register,
       loginWithGoogle,

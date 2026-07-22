@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { AdminBar } from "@/components/AdminBar";
 import { BottomNav } from "@/components/BottomNav";
+import { ViewAsBanner } from "@/components/ViewAsBanner";
 import { Spinner } from "@/components/ui";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -37,6 +38,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <AdminBar />
         {children}
       </div>
+      <ViewAsBanner />
       <BottomNav />
     </div>
   );

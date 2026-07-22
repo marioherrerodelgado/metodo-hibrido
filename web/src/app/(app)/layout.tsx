@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { AdminBar } from "@/components/AdminBar";
 import { BottomNav } from "@/components/BottomNav";
+import { InstallPrompt } from "@/components/InstallPrompt";
 import { ViewAsBanner } from "@/components/ViewAsBanner";
 import { Spinner } from "@/components/ui";
 
@@ -40,6 +41,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
       <ViewAsBanner />
       <BottomNav />
+      <InstallPrompt />
     </div>
   );
 }

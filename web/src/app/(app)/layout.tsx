@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { AdminBar } from "@/components/AdminBar";
 import { BottomNav } from "@/components/BottomNav";
 import { Spinner } from "@/components/ui";
 
@@ -32,7 +33,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-dvh pb-24">
-      <div className="mx-auto w-full max-w-[560px]">{children}</div>
+      <div className="mx-auto w-full max-w-[560px]">
+        <AdminBar />
+        {children}
+      </div>
       <BottomNav />
     </div>
   );

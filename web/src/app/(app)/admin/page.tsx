@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, ShieldAlert, Trash2 } from "lucide-react";
+import { Check, Pencil, Plus, ShieldAlert, Trash2, X } from "lucide-react";
 import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
 import { CsvImport } from "@/components/CsvImport";
 import {
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui";
 import { useAuth } from "@/lib/auth-context";
 import { db } from "@/lib/firebase";
-import { createWod, deleteWod, fetchAllWods } from "@/lib/data";
+import { createWod, deleteWod, fetchAllWods, updateWod } from "@/lib/data";
 import { primaryMuscles } from "@/lib/muscles";
 import {
   INTENSITY_LABEL,
@@ -102,25 +102,30 @@ export default function AdminPage() {
 
 // ─── Entrenamientos ───────────────────────────────────────────────────────
 
+const EMPTY_FORM = {
+  fecha: todayISO(),
+  sport: "crossfit" as Sport,
+  titulo: "",
+  intensity: "media" as Intensity,
+  duration: "",
+  volume: "",
+  type: "",
+  notes: "",
+  warmup: "",
+  main: "",
+  metcon: "",
+  cooldown: "",
+};
+
 function WodsTab() {
   const [wods, setWods] = useState<Wod[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<Sport | "all">("all");
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({
-    fecha: todayISO(),
-    sport: "crossfit" as Sport,
-    titulo: "",
-    intensity: "media" as Intensity,
-    duration: "",
-    volume: "",
-    type: "",
-    notes: "",
-    warmup: "",
-    main: "",
-    metcon: "",
-    cooldown: "",
-  });
+  const [form, setForm] = useState(EMPTY_FORM);
+  // Id del WOD en edición. Si es null, el formulario crea uno nuevo.
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const formRef = useRef<HTMLDivElement>(null);
 
   // El coach ve todo el archivo, incluidos los WODs personales de los atletas.
   const reload = async () => {
@@ -148,6 +153,31 @@ function WodsTab() {
     [wods, filter],
   );
 
+  // Carga un WOD existente en el formulario y sube hasta él para editarlo.
+  const startEdit = (w: Wod) => {
+    setEditingId(w.id);
+    setForm({
+      fecha: w.fecha,
+      sport: w.sport,
+      titulo: w.titulo,
+      intensity: w.intensity,
+      duration: w.duration ?? "",
+      volume: w.volume ?? "",
+      type: w.type ?? "",
+      notes: w.notes ?? "",
+      warmup: w.warmup ?? "",
+      main: w.main ?? "",
+      metcon: w.metcon ?? "",
+      cooldown: w.cooldown ?? "",
+    });
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setForm(EMPTY_FORM);
+  };
+
   const submit = async () => {
     if (!form.fecha || !form.titulo.trim() || !form.main.trim()) return;
     setSaving(true);
@@ -155,23 +185,14 @@ function WodsTab() {
       // Guardamos las zonas inferidas: así el mapa corporal no depende de
       // re-analizar el texto en cada cliente.
       const muscles = primaryMuscles({ ...form } as Partial<Wod>, 8);
-      await createWod({
-        ...form,
-        month: form.fecha.slice(0, 7),
-        muscles,
-        source: "coach",
-      });
-      setForm((f) => ({
-        ...f,
-        titulo: "",
-        duration: "",
-        volume: "",
-        notes: "",
-        warmup: "",
-        main: "",
-        metcon: "",
-        cooldown: "",
-      }));
+      const data = { ...form, month: form.fecha.slice(0, 7), muscles };
+      if (editingId) {
+        await updateWod(editingId, data);
+        setEditingId(null);
+      } else {
+        await createWod({ ...data, source: "coach" });
+      }
+      setForm(EMPTY_FORM);
       await reload();
     } finally {
       setSaving(false);
@@ -180,6 +201,7 @@ function WodsTab() {
 
   const remove = async (w: Wod) => {
     if (!confirm(`¿Eliminar "${w.titulo}" del ${w.fecha}?`)) return;
+    if (editingId === w.id) cancelEdit();
     await deleteWod(w.id);
     await reload();
   };
@@ -188,8 +210,28 @@ function WodsTab() {
     <div className="space-y-7">
       <CsvImport onDone={reload} />
 
-      <div className="rounded-[var(--radius-md)] border border-line-soft bg-surface p-4">
-        <SectionTitle>Nuevo entrenamiento</SectionTitle>
+      <div
+        ref={formRef}
+        className={cn(
+          "scroll-mt-4 rounded-[var(--radius-md)] border bg-surface p-4",
+          editingId ? "border-accent/50" : "border-line-soft",
+        )}
+      >
+        <SectionTitle
+          action={
+            editingId ? (
+              <button
+                onClick={cancelEdit}
+                className="flex items-center gap-1 text-[12px] font-semibold text-ink-3 hover:text-ink"
+              >
+                <X size={13} />
+                Cancelar
+              </button>
+            ) : undefined
+          }
+        >
+          {editingId ? "Editar entrenamiento" : "Nuevo entrenamiento"}
+        </SectionTitle>
 
         <div className="mb-3 grid grid-cols-2 gap-3">
           <Field label="Fecha">
@@ -284,8 +326,8 @@ function WodsTab() {
           disabled={!form.titulo.trim() || !form.main.trim()}
           onClick={submit}
         >
-          <Plus size={16} />
-          Publicar
+          {editingId ? <Check size={16} /> : <Plus size={16} />}
+          {editingId ? "Guardar cambios" : "Publicar"}
         </Button>
       </div>
 
@@ -315,19 +357,35 @@ function WodsTab() {
             {filtered.slice(0, 60).map((w) => (
               <div
                 key={w.id}
-                className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-line-soft bg-surface px-3.5 py-3"
+                className={cn(
+                  "flex items-center gap-3 rounded-[var(--radius-sm)] border bg-surface px-3.5 py-3",
+                  editingId === w.id ? "border-accent/60" : "border-line-soft",
+                )}
               >
-                <span
-                  className="h-2 w-2 shrink-0 rounded-full"
-                  style={{ background: SPORT_COLOR[w.sport] }}
-                />
-                <div className="min-w-0 flex-1">
-                  <div className="truncate text-[14px] font-medium">{w.titulo}</div>
-                  <div className="truncate text-[11px] text-ink-3">
-                    {formatLong(w.fecha)}
-                    {w.source === "ai" && " · IA"}
+                {/* Tocar el entreno lo carga en el formulario para editarlo. */}
+                <button
+                  onClick={() => startEdit(w)}
+                  className="flex min-w-0 flex-1 items-center gap-3 text-left"
+                >
+                  <span
+                    className="h-2 w-2 shrink-0 rounded-full"
+                    style={{ background: SPORT_COLOR[w.sport] }}
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-[14px] font-medium">{w.titulo}</div>
+                    <div className="truncate text-[11px] text-ink-3">
+                      {formatLong(w.fecha)}
+                      {w.source === "ai" && " · IA"}
+                    </div>
                   </div>
-                </div>
+                </button>
+                <button
+                  onClick={() => startEdit(w)}
+                  aria-label="Editar"
+                  className="shrink-0 p-1.5 text-ink-3 transition-colors hover:text-ink"
+                >
+                  <Pencil size={15} />
+                </button>
                 <button
                   onClick={() => remove(w)}
                   aria-label="Eliminar"

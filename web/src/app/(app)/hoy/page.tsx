@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ChevronRight, Flame } from "lucide-react";
 import { motion } from "motion/react";
+import { AnnouncementBanner } from "@/components/AnnouncementBanner";
 import { RestCard, WodCard } from "@/components/WodCard";
 import { WodSheet } from "@/components/WodSheet";
 import { PageFade, Skeleton } from "@/components/ui";
@@ -113,6 +114,9 @@ export default function HoyPage() {
           </Link>
         </div>
       </header>
+
+      {/* Avisos del coach */}
+      <AnnouncementBanner />
 
       {/* Tira de la semana */}
       <div className="no-sb mt-5 flex gap-2 overflow-x-auto px-5">

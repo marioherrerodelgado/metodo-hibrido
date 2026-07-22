@@ -229,3 +229,51 @@ export interface LiftEntry {
 
 /** skillId -> fecha de desbloqueo (YYYY-MM-DD) */
 export type SkillDates = Record<string, string>;
+
+// ─── Panel de coach ───────────────────────────────────────────────────────
+
+/** Aviso que el coach lanza y que aparece en la app de los atletas. */
+export interface Announcement {
+  id: string;
+  title: string;
+  body: string;
+  /** Solo se muestra en la app si está activo. */
+  active: boolean;
+  /** Tono del aviso, para el color de la tarjeta en la app. */
+  tone?: "info" | "importante" | "logro";
+  authorEmail?: string;
+  createdAt: number;
+}
+
+export const ANNOUNCEMENT_TONE: Record<
+  NonNullable<Announcement["tone"]>,
+  { label: string; color: string }
+> = {
+  info: { label: "Info", color: "var(--sport-fuerza)" },
+  importante: { label: "Importante", color: "var(--color-accent)" },
+  logro: { label: "Logro", color: "var(--sport-running)" },
+};
+
+/** Tarea privada del coach (su lista de pendientes). */
+export interface CoachTask {
+  id: string;
+  text: string;
+  done: boolean;
+  /** YYYY-MM-DD, opcional. */
+  due?: string;
+  createdAt: number;
+}
+
+/** Resumen de un cliente para el panel: actividad y cumplimiento. */
+export interface ClientOverview {
+  uid: string;
+  name: string;
+  email: string;
+  role: Role;
+  /** Sesiones marcadas como hechas esta semana. */
+  weekSessions: number;
+  /** Última fecha con actividad (YYYY-MM-DD) o null. */
+  lastActive: string | null;
+  /** Días desde la última actividad; Infinity si nunca. */
+  daysSinceActive: number;
+}

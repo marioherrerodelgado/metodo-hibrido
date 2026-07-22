@@ -3,8 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, Pencil, Plus, ShieldAlert, Trash2, X } from "lucide-react";
-import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
 import { CsvImport } from "@/components/CsvImport";
+import { DashboardTab } from "@/components/admin/DashboardTab";
+import { ClientsTab } from "@/components/admin/ClientsTab";
+import { TeamTab } from "@/components/admin/TeamTab";
+import { AnnouncementsTab } from "@/components/admin/AnnouncementsTab";
 import {
   Button,
   EmptyState,
@@ -18,7 +21,6 @@ import {
   Textarea,
 } from "@/components/ui";
 import { useAuth } from "@/lib/auth-context";
-import { db } from "@/lib/firebase";
 import { createWod, deleteWod, fetchAllWods, updateWod } from "@/lib/data";
 import { primaryMuscles } from "@/lib/muscles";
 import {
@@ -27,19 +29,25 @@ import {
   SPORT_COLOR,
   SPORT_LABEL,
   type Intensity,
-  type Role,
   type Sport,
-  type UserProfile,
   type Wod,
 } from "@/lib/types";
 import { cn, formatLong, todayISO } from "@/lib/utils";
 
-type Tab = "wods" | "atletas";
+type Tab = "resumen" | "clientes" | "equipo" | "wods" | "avisos";
+
+const TABS: { id: Tab; label: string }[] = [
+  { id: "resumen", label: "Resumen" },
+  { id: "clientes", label: "Clientes" },
+  { id: "equipo", label: "Equipo" },
+  { id: "wods", label: "Entrenos" },
+  { id: "avisos", label: "Avisos" },
+];
 
 export default function AdminPage() {
-  const { profile, isCoach, isAdmin, loading } = useAuth();
+  const { user, profile, isCoach, isAdmin, loading } = useAuth();
   const router = useRouter();
-  const [tab, setTab] = useState<Tab>("wods");
+  const [tab, setTab] = useState<Tab>("resumen");
 
   useEffect(() => {
     if (!loading && profile && !isCoach) router.replace("/hoy");
@@ -72,29 +80,36 @@ export default function AdminPage() {
           {isAdmin ? "Administrador" : "Coach"} · {profile?.email}
         </p>
 
-        <div className="mt-3 flex rounded-full border border-line p-0.5">
-          {(
-            [
-              ["wods", "Entrenamientos"],
-              ["atletas", "Atletas"],
-            ] as const
-          ).map(([t, label]) => (
+        {/* Cinco pestañas: no caben en un segmentado, así que van en fila
+            deslizable con la activa resaltada. */}
+        <div className="no-sb mt-3 flex gap-2 overflow-x-auto">
+          {TABS.map((t) => (
             <button
-              key={t}
-              onClick={() => setTab(t)}
+              key={t.id}
+              onClick={() => setTab(t.id)}
               className={cn(
-                "flex-1 rounded-full py-2 text-[13px] font-semibold transition-colors",
-                tab === t ? "bg-ink text-bg" : "text-ink-3",
+                "shrink-0 rounded-full border px-4 py-2 text-[13px] font-semibold transition-colors",
+                tab === t.id
+                  ? "border-ink bg-ink text-bg"
+                  : "border-line text-ink-3 hover:text-ink",
               )}
             >
-              {label}
+              {t.label}
             </button>
           ))}
         </div>
       </header>
 
       <div className="mt-5 px-5">
-        {tab === "wods" ? <WodsTab /> : <AtletasTab canEditRoles={isAdmin} />}
+        {tab === "resumen" && (
+          <DashboardTab onGoClients={() => setTab("clientes")} />
+        )}
+        {tab === "clientes" && <ClientsTab />}
+        {tab === "equipo" && (
+          <TeamTab canEditRoles={isAdmin} myUid={user?.uid ?? ""} />
+        )}
+        {tab === "wods" && <WodsTab />}
+        {tab === "avisos" && <AnnouncementsTab />}
       </div>
     </PageFade>
   );
@@ -397,72 +412,6 @@ function WodsTab() {
             ))}
           </div>
         )}
-      </div>
-    </div>
-  );
-}
-
-// ─── Atletas ──────────────────────────────────────────────────────────────
-
-function AtletasTab({ canEditRoles }: { canEditRoles: boolean }) {
-  const [users, setUsers] = useState<UserProfile[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    getDocs(collection(db, "users"))
-      .then((snap) =>
-        setUsers(snap.docs.map((d) => ({ ...(d.data() as UserProfile), uid: d.id }))),
-      )
-      .catch(() =>
-        setError(
-          "No se puede leer la lista de atletas. Revisa las reglas de Firestore (solo coach/admin deberían poder).",
-        ),
-      )
-      .finally(() => setLoading(false));
-  }, []);
-
-  const setRole = async (uid: string, role: Role) => {
-    await updateDoc(doc(db, "users", uid), { role });
-    setUsers((prev) => prev.map((u) => (u.uid === uid ? { ...u, role } : u)));
-  };
-
-  if (loading) return <Skeleton className="h-40" />;
-  if (error) return <EmptyState title="Sin permisos" hint={error} />;
-
-  return (
-    <div>
-      <SectionTitle>{users.length} registrados</SectionTitle>
-      <div className="space-y-1.5">
-        {users.map((u) => (
-          <div
-            key={u.uid}
-            className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-line-soft bg-surface px-3.5 py-3"
-          >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-2 text-[13px] font-bold">
-              {(u.name || u.email || "?").charAt(0).toUpperCase()}
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-[14px] font-medium">{u.name || "Sin nombre"}</div>
-              <div className="truncate text-[11px] text-ink-3">{u.email}</div>
-            </div>
-            {canEditRoles ? (
-              <Select
-                value={u.role ?? "athlete"}
-                onChange={(e) => setRole(u.uid, e.target.value as Role)}
-                className="h-9 w-auto shrink-0 text-[12px]"
-              >
-                <option value="athlete">Atleta</option>
-                <option value="coach">Coach</option>
-                <option value="admin">Admin</option>
-              </Select>
-            ) : (
-              <span className="mono shrink-0 text-[11px] text-ink-3 uppercase">
-                {u.role ?? "athlete"}
-              </span>
-            )}
-          </div>
-        ))}
       </div>
     </div>
   );

@@ -249,7 +249,7 @@ export default function PerfilPage() {
           Cerrar sesión
         </Button>
         <p className="mono mt-5 text-center text-[10px] tracking-wider text-ink-3 uppercase">
-          Método Híbrido · v4.0
+          Nemea · v4.0
         </p>
       </div>
 

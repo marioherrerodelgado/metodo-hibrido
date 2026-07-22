@@ -1,4 +1,4 @@
-// ─── Modelo de datos de Método Híbrido ────────────────────────────────────
+// ─── Modelo de datos de Nemea ─────────────────────────────────────────────
 // Mantiene compatibilidad con las colecciones que ya existen en Firestore
 // (`wods`, `competiciones`) creadas por la app legacy / admin.html.
 
